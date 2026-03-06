@@ -2039,6 +2039,12 @@ body::before {
   filter: drop-shadow(0 0 8px rgba(0, 212, 255, .15));
 }
 
+.lr-dt-svg {
+  filter: drop-shadow(0 0 12px rgba(0, 212, 255, .1));
+  margin: 0 auto;
+  display: block;
+}
+
 /* ── Comparison banner ── */
 .lr-banner {
   padding: 24px 28px;

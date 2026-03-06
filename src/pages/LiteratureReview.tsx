@@ -486,7 +486,175 @@ function ComparisonBars() {
     );
 }
 
-/* ── Key stats animated ── */
+/* ── Digital Twin Supercapacitor Diagram ── */
+function DigitalTwinSuperCapSVG() {
+    return (
+        <svg className="lr-dt-svg" viewBox="0 0 700 320" width="100%" style={{ maxWidth: 780 }}>
+            <defs>
+                <linearGradient id="dtGrad1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#00d4ff" stopOpacity="0.15" />
+                    <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.08" />
+                </linearGradient>
+                <linearGradient id="dtGrad2" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#10b981" stopOpacity="0.15" />
+                    <stop offset="100%" stopColor="#00d4ff" stopOpacity="0.08" />
+                </linearGradient>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                    <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+            </defs>
+
+            {/* Background panels */}
+            <rect x="10" y="10" width="310" height="300" rx="16" fill="url(#dtGrad1)" stroke="#00d4ff" strokeWidth="0.8" strokeOpacity="0.3" />
+            <rect x="380" y="10" width="310" height="300" rx="16" fill="url(#dtGrad2)" stroke="#10b981" strokeWidth="0.8" strokeOpacity="0.3" />
+
+            {/* Panel titles */}
+            <text x="165" y="38" textAnchor="middle" fontSize="11" fontWeight="700" fill="#00d4ff">🔌 Physical Supercapacitor</text>
+            <text x="535" y="38" textAnchor="middle" fontSize="11" fontWeight="700" fill="#10b981">💻 Digital Twin (PI-LSTM)</text>
+
+            {/* ── LEFT: Physical supercapacitor ── */}
+            {/* Supercapacitor body */}
+            <rect x="85" y="65" width="160" height="190" rx="12" fill="rgba(0,212,255,0.04)" stroke="#00d4ff" strokeWidth="1.2">
+                <animate attributeName="stroke-opacity" values="0.4;0.8;0.4" dur="3s" repeatCount="indefinite" />
+            </rect>
+            {/* Electrodes */}
+            <rect x="105" y="80" width="12" height="160" rx="3" fill="#f59e0b" opacity="0.7">
+                <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite" />
+            </rect>
+            <rect x="213" y="80" width="12" height="160" rx="3" fill="#f59e0b" opacity="0.7">
+                <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite" begin="0.5s" />
+            </rect>
+            {/* Separator */}
+            <line x1="165" y1="80" x2="165" y2="240" stroke="#a78bfa" strokeWidth="1.5" strokeDasharray="4 3">
+                <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="2.5s" repeatCount="indefinite" />
+            </line>
+            {/* Electrolyte ions (animated charge particles) */}
+            {[
+                { cx: 135, cy: 120, r: 3, color: '#f43f5e', dur: '2.8s', dx: 25 },
+                { cx: 140, cy: 155, r: 2.5, color: '#00d4ff', dur: '3.2s', dx: 20 },
+                { cx: 130, cy: 190, r: 3, color: '#f43f5e', dur: '2.5s', dx: 30 },
+                { cx: 195, cy: 130, r: 2.5, color: '#00d4ff', dur: '3s', dx: -25 },
+                { cx: 190, cy: 170, r: 3, color: '#f43f5e', dur: '2.6s', dx: -20 },
+                { cx: 200, cy: 210, r: 2.5, color: '#00d4ff', dur: '3.4s', dx: -30 },
+            ].map((ion, i) => (
+                <circle key={`ion-${i}`} cx={ion.cx} cy={ion.cy} r={ion.r} fill={ion.color} opacity="0.8" filter="url(#glow)">
+                    <animate attributeName="cx" values={`${ion.cx};${ion.cx + ion.dx};${ion.cx}`} dur={ion.dur} repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur={ion.dur} repeatCount="indefinite" />
+                </circle>
+            ))}
+            {/* Terminals */}
+            <line x1="165" y1="55" x2="165" y2="65" stroke="#f59e0b" strokeWidth="2" />
+            <circle cx="165" cy="52" r="4" fill="#f59e0b" opacity="0.9">
+                <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite" />
+            </circle>
+            <line x1="165" y1="255" x2="165" y2="265" stroke="#f59e0b" strokeWidth="2" />
+            <circle cx="165" cy="268" r="4" fill="#f59e0b" opacity="0.9">
+                <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite" begin="1s" />
+            </circle>
+            {/* Sensor labels */}
+            <text x="75" y="105" fontSize="7" fill="rgba(255,255,255,0.5)">V(t)</text>
+            <text x="75" y="165" fontSize="7" fill="rgba(255,255,255,0.5)">I(t)</text>
+            <text x="75" y="225" fontSize="7" fill="rgba(255,255,255,0.5)">T(t)</text>
+            {/* Sensor dots */}
+            {[105, 165, 225].map((y, i) => (
+                <React.Fragment key={`sensor-${i}`}>
+                    <circle cx="85" cy={y} r="3" fill={['#00d4ff', '#f59e0b', '#f43f5e'][i]} opacity="0.8">
+                        <animate attributeName="r" values="2;4;2" dur="1.8s" repeatCount="indefinite" begin={`${i * 0.4}s`} />
+                    </circle>
+                    <line x1="88" y1={y} x2="105" y2={y} stroke={['#00d4ff', '#f59e0b', '#f43f5e'][i]} strokeWidth="0.6" strokeOpacity="0.4" />
+                </React.Fragment>
+            ))}
+
+            {/* ── CENTER: Digital Thread (bidirectional data flow) ── */}
+            {/* Connection lines */}
+            <line x1="320" y1="140" x2="380" y2="140" stroke="#00d4ff" strokeWidth="1" strokeOpacity="0.3" />
+            <line x1="320" y1="180" x2="380" y2="180" stroke="#10b981" strokeWidth="1" strokeOpacity="0.3" />
+            {/* Arrows */}
+            <polygon points="375,136 385,140 375,144" fill="#00d4ff" opacity="0.7">
+                <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" />
+            </polygon>
+            <polygon points="325,176 315,180 325,184" fill="#10b981" opacity="0.7">
+                <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" begin="0.7s" />
+            </polygon>
+            {/* Data packets flowing right (sensor data) */}
+            {[0, 1, 2].map((i) => (
+                <rect key={`pkt-r-${i}`} width="8" height="4" rx="2" fill="#00d4ff" opacity="0.8" filter="url(#glow)">
+                    <animate attributeName="x" values="320;372" dur="1.8s" repeatCount="indefinite" begin={`${i * 0.6}s`} />
+                    <animate attributeName="y" values="138;138" dur="1.8s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin={`${i * 0.6}s`} />
+                </rect>
+            ))}
+            {/* Data packets flowing left (control/predictions) */}
+            {[0, 1].map((i) => (
+                <rect key={`pkt-l-${i}`} width="8" height="4" rx="2" fill="#10b981" opacity="0.8" filter="url(#glow)">
+                    <animate attributeName="x" values="372;320" dur="2s" repeatCount="indefinite" begin={`${i * 0.9}s`} />
+                    <animate attributeName="y" values="178;178" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin={`${i * 0.9}s`} />
+                </rect>
+            ))}
+            {/* Center labels */}
+            <text x="350" y="128" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.5)">Sensor Data →</text>
+            <text x="350" y="198" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.5)">← Predictions</text>
+            <text x="350" y="160" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="#a78bfa">Digital Thread</text>
+
+            {/* ── RIGHT: Digital Twin model ── */}
+            {/* PI-LSTM Block */}
+            <rect x="410" y="60" width="250" height="70" rx="10" fill="rgba(16,185,129,0.06)" stroke="#10b981" strokeWidth="0.8">
+                <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" />
+            </rect>
+            <text x="535" y="78" textAnchor="middle" fontSize="8" fontWeight="600" fill="#10b981">PI-LSTM Network</text>
+            {/* LSTM cells */}
+            {[440, 500, 560, 620].map((x, i) => (
+                <React.Fragment key={`lstm-${i}`}>
+                    <rect x={x} y="88" width="30" height="28" rx="5" fill="rgba(0,212,255,0.08)" stroke="#00d4ff" strokeWidth="0.8">
+                        <animate attributeName="fill-opacity" values="0.3;0.8;0.3" dur={`${2 + i * 0.3}s`} repeatCount="indefinite" />
+                    </rect>
+                    <text x={x + 15} y="106" textAnchor="middle" fontSize="7" fill="#00d4ff">h{i + 1}</text>
+                    {i < 3 && <line x1={x + 30} y1="102" x2={x + 60} y2="102" stroke="#00d4ff" strokeWidth="0.5" strokeOpacity="0.4" />}
+                </React.Fragment>
+            ))}
+
+            {/* Physics constraint block */}
+            <rect x="410" y="145" width="250" height="50" rx="10" fill="rgba(245,158,11,0.06)" stroke="#f59e0b" strokeWidth="0.8">
+                <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="3.5s" repeatCount="indefinite" />
+            </rect>
+            <text x="535" y="163" textAnchor="middle" fontSize="8" fontWeight="600" fill="#f59e0b">⚡ Physics Constraints (RC Circuit)</text>
+            <text x="535" y="180" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.45)">L = L_data + λ · L_physics</text>
+            <text x="535" y="190" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.35)">v(k+1) = f(v(k), i(k), Rₛ, Rₚ, C)</text>
+
+            {/* Output prediction block */}
+            <rect x="440" y="210" width="190" height="48" rx="10" fill="rgba(164,139,250,0.06)" stroke="#a78bfa" strokeWidth="0.8">
+                <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="2.8s" repeatCount="indefinite" />
+            </rect>
+            <text x="535" y="228" textAnchor="middle" fontSize="8" fontWeight="600" fill="#a78bfa">📊 Predictions</text>
+            {/* Output metrics */}
+            {[
+                { label: 'SOC', x: 470, color: '#00d4ff' },
+                { label: 'V(k)', x: 520, color: '#10b981' },
+                { label: 'RUL', x: 570, color: '#f59e0b' },
+                { label: 'SOH', x: 610, color: '#f43f5e' },
+            ].map((m) => (
+                <React.Fragment key={m.label}>
+                    <circle cx={m.x} cy="248" r="6" fill={m.color} opacity="0.2">
+                        <animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <text x={m.x} y="250" textAnchor="middle" fontSize="6" fontWeight="600" fill={m.color}>{m.label}</text>
+                </React.Fragment>
+            ))}
+
+            {/* Connection arrows between DT layers */}
+            <line x1="535" y1="130" x2="535" y2="145" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
+            <line x1="535" y1="195" x2="535" y2="210" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
+
+            {/* Bottom labels */}
+            <text x="165" y="290" textAnchor="middle" fontSize="7.5" fill="rgba(255,255,255,0.4)">Real-time Measurements</text>
+            <text x="535" y="278" textAnchor="middle" fontSize="7.5" fill="rgba(255,255,255,0.4)">Offline-Trained Surrogate</text>
+        </svg>
+    );
+}
+
+
 function HeroStats() {
     const papers = useCounter(150, 2500);
     const models = useCounter(42, 2000);
@@ -539,6 +707,15 @@ export default function LiteratureReview() {
             <div className="lr-banner glass-card fade-in fade-in-d1">
                 <h3 className="lr-banner-title">⚖️ Modeling Paradigm Comparison</h3>
                 <ComparisonBars />
+            </div>
+
+            {/* ── Digital Twin Supercapacitor Diagram ── */}
+            <div className="lr-banner glass-card fade-in fade-in-d2" style={{ textAlign: 'center' }}>
+                <h3 className="lr-banner-title">🔋 Digital Twin Architecture for Supercapacitor Modeling</h3>
+                <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 18, maxWidth: 600, marginLeft: 'auto', marginRight: 'auto' }}>
+                    Bidirectional data flow between the physical supercapacitor and its PI‑LSTM digital twin — sensor data feeds the model, predictions drive optimization.
+                </p>
+                <DigitalTwinSuperCapSVG />
             </div>
 
             {/* ── Sections ── */}
