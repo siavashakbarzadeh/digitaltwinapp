@@ -44,7 +44,7 @@ export default function App() {
                             onClick={() => setTab('literature')}
                         >
                             <span className="tab-icon">📚</span>
-                            Literature Review
+                            Literature Review offline
                         </button>
                     </nav>
                 </div>
