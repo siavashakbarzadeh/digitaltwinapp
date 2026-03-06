@@ -160,8 +160,9 @@ export default function App() {
                         />
                     )}
                     {tab === 'literature' && <LiteratureReview />}
-                    {tab === 'offline_twin' && <OfflineTwin />}
-                    {tab === 'online_twin' && <OnlineTwin />}
+                    {tab === 'online_twin' && (
+                        <OnlineTwin />
+                    )}
                     {tab === 'twin_view' && (
                         <DigitalTwinView selectedScenarioId={selectedScenarioId} />
                     )}

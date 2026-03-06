@@ -67,19 +67,11 @@ export default function AssetOverview({ selectedScenarioId, history, onSwitchTab
                     </div>
                     <div className="hub-card-arrow">→</div>
                 </div>
-                <div className="hub-card glass-card" onClick={() => onSwitchTab('offline_twin')}>
-                    <div className="hub-card-icon">📊</div>
-                    <div className="hub-card-text">
-                        <h4>Offline Twin (PI‑LSTM)</h4>
-                        <p>Deep-dive analysis of physics‑informed model accuracy.</p>
-                    </div>
-                    <div className="hub-card-arrow">→</div>
-                </div>
                 <div className="hub-card glass-card" onClick={() => onSwitchTab('online_twin')}>
-                    <div className="hub-card-icon">📡</div>
+                    <div className="hub-card-icon">🏗️</div>
                     <div className="hub-card-text">
-                        <h4>Online Twin (RLS)</h4>
-                        <p>Interactive real‑time parameter estimation & tracking.</p>
+                        <h4>Digital Twin Hub</h4>
+                        <p>Complete lifecycle: Offline analysis (PI‑LSTM) & Online monitoring (RLS).</p>
                     </div>
                     <div className="hub-card-arrow">→</div>
                 </div>

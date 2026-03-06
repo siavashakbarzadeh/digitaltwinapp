@@ -147,8 +147,25 @@ export const scenarios: Scenario[] = [
 
     buildScenario('bat-new-20a', 'Battery: 20A Load (New)', 'New battery pack under steady load.', 'Standard', '20 A', '#10b981', current20A, 180, 0.5, 3.7, 'battery', 'new'),
     buildScenario('bat-new-60a', 'Battery: Dynamic (New)', 'New battery pack under transient profile.', 'Industrial', '60 A', '#a78bfa', current60A, 120, 0.5, 3.8, 'battery', 'new'),
-    buildScenario('bat-aged-60a', 'Battery: Dynamic (Aged)', 'Aged battery pack with significant capacity fade.', 'Industrial', '60 A', '#a78bfa', current60A, 120, 0.5, 3.8, 'battery', 'aged'),
+    buildScenario('sc-aged-60a', 'Battery: Dynamic (Aged)', 'Aged battery pack with significant capacity fade.', 'Industrial', '60 A', '#a78bfa', current60A, 120, 0.5, 3.8, 'battery', 'aged'),
 ];
+
+/* ── Compatibility Aliases for Offline Twin ── */
+export const scenario_aliases: Record<string, string> = {
+    '90a': 'sc-new-90a',
+    '20a': 'bat-new-20a',
+    '60a': 'bat-new-60a',
+    '140a': 'sc-new-140a'
+};
+
+// Add aliases to the scenarios array for lookup by old IDs
+const aliases = Object.entries(scenario_aliases).map(([oldId, newId]) => {
+    const original = scenarios.find(s => s.id === newId);
+    if (original) return { ...original, id: oldId };
+    return null;
+}).filter(Boolean) as Scenario[];
+
+scenarios.push(...aliases);
 
 export interface LossPoint { epoch: number; trainLoss: number; valLoss: number }
 export const lstmLossData: LossPoint[] = [{ epoch: 1, trainLoss: 0.015, valLoss: 0.0087 }, { epoch: 20, trainLoss: 0.00253, valLoss: 0.0082 }];
