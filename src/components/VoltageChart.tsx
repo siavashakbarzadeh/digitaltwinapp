@@ -4,9 +4,13 @@ import {
 } from 'recharts';
 
 interface Props {
-    data: { time: number; measured: number; predicted: number }[];
+    data: { time: number; measured: number; predicted: number; baseline?: number }[];
     measuredColor?: string;
     predictedColor?: string;
+    baselineColor?: string;
+    measuredLabel?: string;
+    predictedLabel?: string;
+    baselineLabel?: string;
     xLabel?: string;
     yLabel?: string;
 }
@@ -33,9 +37,15 @@ export default function VoltageChart({
     data,
     measuredColor = '#00d4ff',
     predictedColor = '#f59e0b',
+    baselineColor = '#a78bfa',
+    measuredLabel = 'Measured',
+    predictedLabel = 'PI‑LSTM Predicted',
+    baselineLabel = 'LSTM Baseline',
     xLabel = 'Time (s)',
     yLabel = 'Voltage (V)',
 }: Props) {
+    const hasBaseline = data.length > 0 && data[0].baseline !== undefined;
+
     return (
         <>
             <div className="chart-wrapper">
@@ -56,16 +66,28 @@ export default function VoltageChart({
                         <Line
                             type="monotone"
                             dataKey="measured"
-                            name="Measured"
+                            name={measuredLabel}
                             stroke={measuredColor}
                             strokeWidth={2}
                             dot={false}
                             isAnimationActive={false}
                         />
+                        {hasBaseline && (
+                            <Line
+                                type="monotone"
+                                dataKey="baseline"
+                                name={baselineLabel}
+                                stroke={baselineColor}
+                                strokeWidth={1.5}
+                                strokeDasharray="8 4"
+                                dot={false}
+                                isAnimationActive={false}
+                            />
+                        )}
                         <Line
                             type="monotone"
                             dataKey="predicted"
-                            name="PI‑LSTM Predicted"
+                            name={predictedLabel}
                             stroke={predictedColor}
                             strokeWidth={2}
                             strokeDasharray="6 3"
@@ -78,11 +100,17 @@ export default function VoltageChart({
             <div className="chart-legend">
                 <span className="legend-item">
                     <span className="legend-dot" style={{ background: measuredColor }} />
-                    Measured
+                    {measuredLabel}
                 </span>
+                {hasBaseline && (
+                    <span className="legend-item">
+                        <span className="legend-dot" style={{ background: baselineColor }} />
+                        {baselineLabel}
+                    </span>
+                )}
                 <span className="legend-item">
                     <span className="legend-dot" style={{ background: predictedColor }} />
-                    PI‑LSTM Predicted
+                    {predictedLabel}
                 </span>
             </div>
         </>
