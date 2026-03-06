@@ -162,3 +162,14 @@ export const paperMetrics = {
     piLstm: { mae: 0.023, rmse: 0.041, r2: 0.991 },
 };
 export const PILSTM_PARAMS = ASSET_PARAMS.supercapacitor.new;
+export const LSTM_PARAMS = { Rs: 0.000176, C0: 4500, K: 29.89 };
+
+export const lstmTimeData = Array.from({ length: 20 }, (_, i) => ({
+    epoch: i + 1,
+    time: 700 + Math.random() * 45
+}));
+
+export const piLstmTimeData = Array.from({ length: 20 }, (_, i) => ({
+    epoch: i + 1,
+    time: 520 - i * 0.5 + Math.random() * 5
+}));

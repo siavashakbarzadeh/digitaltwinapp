@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AssetType, DeviceCondition, scenarios, ASSET_PARAMS } from '../data/scenarios';
-import { HistoryEntry } from '../App';
+import { HistoryEntry } from '../types';
 
 /* ═══════════════════════════════════════════════════
    Home / Asset Overview — KPI Dashboard

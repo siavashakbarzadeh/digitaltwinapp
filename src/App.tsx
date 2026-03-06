@@ -1,21 +1,14 @@
+import AssetOverview from './pages/AssetOverview';
+import DigitalTwinView from './pages/DigitalTwinView';
+import ScenarioSelector from './pages/ScenarioSelector';
 import InfoExplanation from './pages/InfoExplanation';
 import ComparisonView from './pages/ComparisonView';
 import { scenarios, Scenario, AssetType, DeviceCondition } from './data/scenarios';
 import { useState, useEffect, useCallback } from 'react';
 import { mae, rmse } from './utils/metrics';
 
-type Tab = 'overview' | 'twin' | 'comparison' | 'scenarios' | 'info';
-
-export interface HistoryEntry {
-    id: string;
-    timestamp: string;
-    assetType: AssetType;
-    scenarioName: string;
-    condition: DeviceCondition;
-    mae: number;
-    rmse: number;
-    soh: number;
-}
+import { HistoryEntry } from './types';
+import { Tab } from './types';
 
 export default function App() {
     const [tab, setTab] = useState<Tab>('overview');
@@ -135,10 +128,7 @@ export default function App() {
                 <div className="scenario-strip">
                     <span className="ss-label">Active Scenario:</span>
                     <span className="ss-value">{
-                        selectedScenarioId === '90a' ? '90 A Evaluation Profile' :
-                            selectedScenarioId === '20a' ? '20 A Low-Current (Simulink)' :
-                                selectedScenarioId === '60a' ? '60 A Medium-Transient (Simulink)' :
-                                    '140 A High-Current Stress (Simulink)'
+                        scenarios.find(s => s.id === selectedScenarioId)?.name || 'Unknown Scenario'
                     }</span>
                     <button
                         className="ss-change-btn"
@@ -168,7 +158,7 @@ export default function App() {
                 {tab === 'scenarios' && (
                     <ScenarioSelector
                         selectedScenarioId={selectedScenarioId}
-                        onSelectScenario={(id) => {
+                        onSelectScenario={(id: string) => {
                             handleScenarioSelect(id);
                         }}
                     />
