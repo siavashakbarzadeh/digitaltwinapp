@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import OfflineTwin from './pages/OfflineTwin';
 import OnlineTwin from './pages/OnlineTwin';
+import LiteratureReview from './pages/LiteratureReview';
+
+type Tab = 'offline' | 'online' | 'literature';
 
 export default function App() {
-    const [tab, setTab] = useState<'offline' | 'online'>('offline');
+    const [tab, setTab] = useState<Tab>('offline');
 
     return (
         <div className="app">
@@ -35,13 +38,23 @@ export default function App() {
                             <span className="tab-icon">🔴</span>
                             Online Twin
                         </button>
+                        <button
+                            id="tab-literature"
+                            className={`tab-btn ${tab === 'literature' ? 'active' : ''}`}
+                            onClick={() => setTab('literature')}
+                        >
+                            <span className="tab-icon">📚</span>
+                            Literature Review
+                        </button>
                     </nav>
                 </div>
             </header>
 
             {/* ── Content ── */}
             <main className="app-main">
-                {tab === 'offline' ? <OfflineTwin /> : <OnlineTwin />}
+                {tab === 'offline' && <OfflineTwin />}
+                {tab === 'online' && <OnlineTwin />}
+                {tab === 'literature' && <LiteratureReview />}
             </main>
 
             {/* ── Footer ── */}
