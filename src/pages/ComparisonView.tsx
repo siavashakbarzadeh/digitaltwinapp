@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import React from 'react';
 import { HistoryEntry } from '../types';
 import { scenarios } from '../data/scenarios';
 

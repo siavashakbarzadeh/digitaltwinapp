@@ -11,4 +11,4 @@ export interface HistoryEntry {
     soh: number;
 }
 
-export type Tab = 'overview' | 'twin' | 'comparison' | 'scenarios' | 'info';
+export type Tab = 'hub' | 'literature' | 'offline_twin' | 'online_twin' | 'twin_view' | 'comparison' | 'scenarios' | 'info';

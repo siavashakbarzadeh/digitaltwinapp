@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AssetType, DeviceCondition, scenarios, ASSET_PARAMS } from '../data/scenarios';
-import { HistoryEntry } from '../types';
+import { HistoryEntry, Tab } from '../types';
 
 /* ═══════════════════════════════════════════════════
    Home / Asset Overview — KPI Dashboard
@@ -9,6 +9,7 @@ import { HistoryEntry } from '../types';
 interface Props {
     selectedScenarioId: string;
     history: HistoryEntry[];
+    onSwitchTab: (tab: any) => void;
 }
 
 function AnimatedNumber({ value, suffix = "", decimals = 1 }: { value: number, suffix?: string, decimals?: number }) {
@@ -32,7 +33,7 @@ function AnimatedNumber({ value, suffix = "", decimals = 1 }: { value: number, s
     return <span>{display.toFixed(decimals)}{suffix}</span>;
 }
 
-export default function AssetOverview({ selectedScenarioId, history }: Props) {
+export default function AssetOverview({ selectedScenarioId, history, onSwitchTab }: Props) {
     const scenario = useMemo(() => scenarios.find(s => s.id === selectedScenarioId) || scenarios[0], [selectedScenarioId]);
 
     // Derived values (mocked for demo)
@@ -54,6 +55,34 @@ export default function AssetOverview({ selectedScenarioId, history }: Props) {
                 </div>
                 <h1>{scenario.name}</h1>
                 <p>{scenario.description}</p>
+            </div>
+
+            {/* ── Hub Module Grid ── */}
+            <div className="hub-module-grid">
+                <div className="hub-card glass-card" onClick={() => onSwitchTab('literature')}>
+                    <div className="hub-card-icon">📖</div>
+                    <div className="hub-card-text">
+                        <h4>Literature Review</h4>
+                        <p>Theoretical foundation & PI‑LSTM architecture overview.</p>
+                    </div>
+                    <div className="hub-card-arrow">→</div>
+                </div>
+                <div className="hub-card glass-card" onClick={() => onSwitchTab('offline_twin')}>
+                    <div className="hub-card-icon">📊</div>
+                    <div className="hub-card-text">
+                        <h4>Offline Twin (PI‑LSTM)</h4>
+                        <p>Deep-dive analysis of physics‑informed model accuracy.</p>
+                    </div>
+                    <div className="hub-card-arrow">→</div>
+                </div>
+                <div className="hub-card glass-card" onClick={() => onSwitchTab('online_twin')}>
+                    <div className="hub-card-icon">📡</div>
+                    <div className="hub-card-text">
+                        <h4>Online Twin (RLS)</h4>
+                        <p>Interactive real‑time parameter estimation & tracking.</p>
+                    </div>
+                    <div className="hub-card-arrow">→</div>
+                </div>
             </div>
 
             {/* ── KPI Grid ── */}

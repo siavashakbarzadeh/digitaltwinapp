@@ -1,3 +1,4 @@
+import React from 'react';
 import { scenarios } from '../data/scenarios';
 import type { Scenario } from '../data/scenarios';
 
