@@ -12,6 +12,11 @@ export default function App() {
         <div className="app">
             {/* ── Header ── */}
             <header className="app-header">
+                {/* Animated particles */}
+                <div className="header-particles">
+                    <span /><span /><span /><span /><span /><span /><span /><span />
+                </div>
+
                 <div className="header-content">
                     <div className="logo">
                         <div className="logo-icon">⚡</div>
@@ -60,13 +65,24 @@ export default function App() {
             {/* ── Footer ── */}
             <footer style={{
                 textAlign: 'center',
-                padding: '24px 20px 32px',
+                padding: '32px 20px 40px',
                 fontSize: '0.7rem',
                 color: 'var(--text-muted)',
                 borderTop: '1px solid var(--border)',
             }}>
-                Research demo — Supercapacitor Digital Twin &nbsp;·&nbsp; PhD Thesis
+                <div style={{ marginBottom: 8, fontSize: '1.2rem' }}>⚡</div>
+                <div style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 4 }}>
+                    Supercapacitor Digital Twin Platform
+                </div>
+                <div>Research demo &nbsp;·&nbsp; PhD Thesis &nbsp;·&nbsp; Physics-Informed LSTM + Online RLS</div>
+                <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center', gap: 24, fontSize: '0.65rem' }}>
+                    <span>🔬 3 Models</span>
+                    <span>📊 5 Scenarios</span>
+                    <span>⚡ Real-time RLS</span>
+                    <span>🧠 PI-LSTM</span>
+                </div>
             </footer>
         </div>
     );
 }
+

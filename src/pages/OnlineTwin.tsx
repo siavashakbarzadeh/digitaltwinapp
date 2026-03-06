@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { createRLS, rlsUpdate, thetaToPhysical } from '../utils/rlsEstimator';
 import VoltageChart from '../components/VoltageChart';
@@ -126,16 +127,63 @@ export default function OnlineTwin() {
 
     return (
         <div className="fade-in">
-            <h2 className="section-title">Online Digital Twin</h2>
-            <p className="section-subtitle">
-                Real-time parameter identification using Recursive Least Squares (RLS)
-                on a linear RC model. A synthetic current signal drives the true system;
-                the RLS algorithm adapts the estimated C and R to match the observed
-                voltage.
-            </p>
+            {/* ── Animated Hero Banner ── */}
+            <div className="online-hero-banner fade-in">
+                <h2>🔴 Online Digital Twin — Real-Time RLS</h2>
+                <p>
+                    Real-time parameter identification using Recursive Least Squares (RLS)
+                    on a linear RC model. Watch the algorithm adapt C and R live as synthetic
+                    current drives the system.
+                </p>
+                <div className="equation-highlight" style={{ marginTop: 12 }}>
+                    V[k+1] = a·V[k] + b·I[k] &nbsp;&nbsp;|&nbsp;&nbsp; C = Δt/b &nbsp;&nbsp;|&nbsp;&nbsp; R = b/(1−a)
+                </div>
+            </div>
+
+            {/* ── Animated Stats Row ── */}
+            <div className="anim-stats-row fade-in fade-in-d1">
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--cyan)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">⚡</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--cyan)' }}>RLS</span>
+                    <span className="anim-stat-label">Algorithm</span>
+                </div>
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--emerald)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">📡</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--emerald)' }}>60ms</span>
+                    <span className="anim-stat-label">Tick Rate</span>
+                </div>
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--amber)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">🔄</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--amber)' }}>λ=0.995</span>
+                    <span className="anim-stat-label">Forgetting Factor</span>
+                </div>
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--violet)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">🎯</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--violet)' }}>2</span>
+                    <span className="anim-stat-label">Parameters</span>
+                </div>
+            </div>
+
+            {/* ── Step Flow Diagram ── */}
+            <div className="glass-card fade-in fade-in-d2" style={{ padding: '18px 24px', marginBottom: 24 }}>
+                <h3 style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 6 }}>
+                    🔁 RLS Pipeline
+                </h3>
+                <div className="step-flow">
+                    <div className="step-node"><div className="step-node-icon" style={{ '--node-color': '#f59e0b', '--node-bg': 'rgba(245,158,11,.08)' } as React.CSSProperties}>🔌</div><span className="step-node-label">Current I(t)</span></div>
+                    <span className="step-arrow">→</span>
+                    <div className="step-node"><div className="step-node-icon" style={{ '--node-color': '#00d4ff', '--node-bg': 'rgba(0,212,255,.08)' } as React.CSSProperties}>⚙️</div><span className="step-node-label">True System</span></div>
+                    <span className="step-arrow">→</span>
+                    <div className="step-node"><div className="step-node-icon" style={{ '--node-color': '#f43f5e', '--node-bg': 'rgba(244,63,94,.08)' } as React.CSSProperties}>📏</div><span className="step-node-label">V_meas + Noise</span></div>
+                    <span className="step-arrow">→</span>
+                    <div className="step-node"><div className="step-node-icon" style={{ '--node-color': '#10b981', '--node-bg': 'rgba(16,185,129,.08)' } as React.CSSProperties}>🧠</div><span className="step-node-label">RLS Update</span></div>
+                    <span className="step-arrow">→</span>
+                    <div className="step-node"><div className="step-node-icon" style={{ '--node-color': '#a78bfa', '--node-bg': 'rgba(167,139,250,.08)' } as React.CSSProperties}>📊</div><span className="step-node-label">θ → C, R</span></div>
+                </div>
+            </div>
 
             {/* Controls */}
-            <div className="online-controls">
+            <div className="online-controls fade-in fade-in-d3">
                 {!running ? (
                     <button className="btn btn-primary" onClick={start}>▶ Start</button>
                 ) : (

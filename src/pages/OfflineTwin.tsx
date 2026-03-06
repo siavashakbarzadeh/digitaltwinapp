@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useMemo } from 'react';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -91,14 +92,42 @@ export default function OfflineTwin() {
 
     return (
         <div className="fade-in">
-            {/* ════════ 1. TITLE ════════ */}
-            <h2 className="section-title">Offline Digital Twin — PI‑LSTM Framework</h2>
-            <p className="section-subtitle">
-                Physics-Informed LSTM framework for discrete-time supercapacitor voltage
-                modelling. Combines equivalent-circuit interpretability with LSTM sequence
-                learning while avoiding PINN training instabilities and continuous-time
-                differentiation overhead.
-            </p>
+            {/* ── Hero Banner ── */}
+            <div className="offline-hero-banner fade-in">
+                <h2>📊 Offline Digital Twin — PI‑LSTM Framework</h2>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: 560, lineHeight: 1.6 }}>
+                    Physics-Informed LSTM framework for discrete-time supercapacitor voltage modelling.
+                    Combines equivalent-circuit interpretability with LSTM sequence learning, avoiding
+                    PINN training instabilities and continuous-time differentiation overhead.
+                </p>
+                <div className="equation-highlight" style={{ marginTop: 12 }}>
+                    ℒ = ℒ<sub>data</sub> + λ · ℒ<sub>physics</sub> &nbsp;&nbsp;|&nbsp;&nbsp; V̂[k+1] = f<sub>LSTM</sub>(x[k]) &nbsp;&nbsp;|&nbsp;&nbsp; RC residual penalty
+                </div>
+            </div>
+
+            {/* ── Animated Stats ── */}
+            <div className="anim-stats-row fade-in fade-in-d1">
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--cyan)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">🧬</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--cyan)' }}>3</span>
+                    <span className="anim-stat-label">Pipeline Stages</span>
+                </div>
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--violet)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">🧠</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--violet)' }}>PI-LSTM</span>
+                    <span className="anim-stat-label">Architecture</span>
+                </div>
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--emerald)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">📈</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--emerald)' }}>R²≈1</span>
+                    <span className="anim-stat-label">Accuracy</span>
+                </div>
+                <div className="anim-stat-card" style={{ '--card-color': 'var(--amber)' } as React.CSSProperties}>
+                    <span className="anim-stat-icon">⚡</span>
+                    <span className="anim-stat-value" style={{ color: 'var(--amber)' }}>5</span>
+                    <span className="anim-stat-label">Test Scenarios</span>
+                </div>
+            </div>
 
             {/* ════════ 2. ARCHITECTURE WORKFLOW ════════ */}
             <div className="glass-card chart-section fade-in fade-in-d1">
