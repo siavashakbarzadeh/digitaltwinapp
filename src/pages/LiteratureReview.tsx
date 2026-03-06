@@ -417,10 +417,10 @@ function NeuralNetworkSVG() {
                 })
             )}
             {/* labels */}
-            <text x={lx[0]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">Input</text>
-            <text x={lx[1]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">LSTM</text>
-            <text x={lx[2]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">Physics</text>
-            <text x={lx[3]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">Output</text>
+            <text x={lx[0]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">Offline Input</text>
+            <text x={lx[1]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">PI-LSTM</text>
+            <text x={lx[2]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">Physics Loss</text>
+            <text x={lx[3]} y={h - 4} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.4)">Offline Out</text>
         </svg>
     );
 }
@@ -454,8 +454,9 @@ function CircuitSVG() {
             <circle cx="240" cy="40" r="4" fill="#f43f5e" opacity="0.8">
                 <animate attributeName="r" values="3;5;3" dur="1.5s" repeatCount="indefinite" begin="0.7s" />
             </circle>
-            <text x="20" y="58" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.5)">i(k)</text>
-            <text x="240" y="58" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.5)">v(k)</text>
+            <text x="20" y="58" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.5)">i(k) offline</text>
+            <text x="240" y="58" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,.5)">v(k) offline</text>
+            <text x="130" y="76" textAnchor="middle" fontSize="6" fill="rgba(255,255,255,.3)">Offline Parameter Identification</text>
         </svg>
     );
 }
@@ -465,7 +466,7 @@ function ComparisonBars() {
     const items = [
         { label: 'Physics-Only', acc: 82, speed: 95, interp: 98, color: '#f59e0b' },
         { label: 'Data-Driven', acc: 91, speed: 70, interp: 30, color: '#f43f5e' },
-        { label: 'Hybrid PI-LSTM', acc: 96, speed: 85, interp: 88, color: '#00d4ff' },
+        { label: 'Offline PI-LSTM', acc: 96, speed: 85, interp: 88, color: '#00d4ff' },
     ];
     return (
         <div className="lr-compare">
@@ -511,7 +512,7 @@ function DigitalTwinSuperCapSVG() {
 
             {/* Panel titles */}
             <text x="165" y="38" textAnchor="middle" fontSize="11" fontWeight="700" fill="#00d4ff">🔌 Physical Supercapacitor</text>
-            <text x="535" y="38" textAnchor="middle" fontSize="11" fontWeight="700" fill="#10b981">💻 Digital Twin (PI-LSTM)</text>
+            <text x="535" y="38" textAnchor="middle" fontSize="11" fontWeight="700" fill="#10b981">💻 Offline Digital Twin (PI-LSTM)</text>
 
             {/* ── LEFT: Physical supercapacitor ── */}
             {/* Supercapacitor body */}
@@ -594,16 +595,17 @@ function DigitalTwinSuperCapSVG() {
                 </rect>
             ))}
             {/* Center labels */}
-            <text x="350" y="128" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.5)">Sensor Data →</text>
-            <text x="350" y="198" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.5)">← Predictions</text>
-            <text x="350" y="160" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="#a78bfa">Digital Thread</text>
+            <text x="350" y="122" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.5)">Offline Data →</text>
+            <text x="350" y="198" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.5)">← Offline Predictions</text>
+            <text x="350" y="155" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="#a78bfa">Offline</text>
+            <text x="350" y="166" textAnchor="middle" fontSize="7.5" fontWeight="600" fill="#a78bfa">Digital Thread</text>
 
             {/* ── RIGHT: Digital Twin model ── */}
             {/* PI-LSTM Block */}
             <rect x="410" y="60" width="250" height="70" rx="10" fill="rgba(16,185,129,0.06)" stroke="#10b981" strokeWidth="0.8">
                 <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="3s" repeatCount="indefinite" />
             </rect>
-            <text x="535" y="78" textAnchor="middle" fontSize="8" fontWeight="600" fill="#10b981">PI-LSTM Network</text>
+            <text x="535" y="78" textAnchor="middle" fontSize="8" fontWeight="600" fill="#10b981">Offline PI-LSTM Network</text>
             {/* LSTM cells */}
             {[440, 500, 560, 620].map((x, i) => (
                 <React.Fragment key={`lstm-${i}`}>
@@ -619,15 +621,15 @@ function DigitalTwinSuperCapSVG() {
             <rect x="410" y="145" width="250" height="50" rx="10" fill="rgba(245,158,11,0.06)" stroke="#f59e0b" strokeWidth="0.8">
                 <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="3.5s" repeatCount="indefinite" />
             </rect>
-            <text x="535" y="163" textAnchor="middle" fontSize="8" fontWeight="600" fill="#f59e0b">⚡ Physics Constraints (RC Circuit)</text>
-            <text x="535" y="180" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.45)">L = L_data + λ · L_physics</text>
+            <text x="535" y="163" textAnchor="middle" fontSize="8" fontWeight="600" fill="#f59e0b">⚡ Offline Physics Constraints (RC)</text>
+            <text x="535" y="180" textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.45)">L_offline = L_data + λ · L_physics</text>
             <text x="535" y="190" textAnchor="middle" fontSize="6.5" fill="rgba(255,255,255,0.35)">v(k+1) = f(v(k), i(k), Rₛ, Rₚ, C)</text>
 
             {/* Output prediction block */}
             <rect x="440" y="210" width="190" height="48" rx="10" fill="rgba(164,139,250,0.06)" stroke="#a78bfa" strokeWidth="0.8">
                 <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="2.8s" repeatCount="indefinite" />
             </rect>
-            <text x="535" y="228" textAnchor="middle" fontSize="8" fontWeight="600" fill="#a78bfa">📊 Predictions</text>
+            <text x="535" y="228" textAnchor="middle" fontSize="8" fontWeight="600" fill="#a78bfa">📊 Offline Predictions</text>
             {/* Output metrics */}
             {[
                 { label: 'SOC', x: 470, color: '#00d4ff' },
@@ -648,8 +650,8 @@ function DigitalTwinSuperCapSVG() {
             <line x1="535" y1="195" x2="535" y2="210" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
 
             {/* Bottom labels */}
-            <text x="165" y="290" textAnchor="middle" fontSize="7.5" fill="rgba(255,255,255,0.4)">Real-time Measurements</text>
-            <text x="535" y="278" textAnchor="middle" fontSize="7.5" fill="rgba(255,255,255,0.4)">Offline-Trained Surrogate</text>
+            <text x="165" y="290" textAnchor="middle" fontSize="7.5" fill="rgba(255,255,255,0.4)">Historical / Offline Measurements</text>
+            <text x="535" y="278" textAnchor="middle" fontSize="7.5" fill="rgba(255,255,255,0.4)">Offline-Trained PI-LSTM Surrogate</text>
         </svg>
     );
 }
@@ -689,10 +691,10 @@ export default function LiteratureReview() {
             <div className="lr-hero glass-card fade-in">
                 <Particles />
                 <div className="lr-hero-icon">📚</div>
-                <h1 className="lr-hero-title">Digital Twins for Energy Storage Systems</h1>
-                <p className="lr-hero-sub">A Comprehensive Review with Emphasis on Offline Physics‑Informed LSTM Modeling</p>
+                <h1 className="lr-hero-title">Offline Digital Twins for Energy Storage Systems</h1>
+                <p className="lr-hero-sub">A Comprehensive Review — Offline Physics‑Informed LSTM Modeling for Supercapacitors</p>
                 <div className="lr-hero-tags">
-                    {['Literature Review', 'Digital Twin', 'PI-LSTM', 'Energy Storage', 'Supercapacitors'].map((t) => (
+                    {['Offline Modeling', 'Digital Twin', 'Offline PI-LSTM', 'Energy Storage', 'Supercapacitors'].map((t) => (
                         <span key={t} className="lr-tag">{t}</span>
                     ))}
                 </div>
@@ -705,15 +707,15 @@ export default function LiteratureReview() {
 
             {/* ── Comparison banner ── */}
             <div className="lr-banner glass-card fade-in fade-in-d1">
-                <h3 className="lr-banner-title">⚖️ Modeling Paradigm Comparison</h3>
+                <h3 className="lr-banner-title">⚖️ Offline Modeling Paradigm Comparison</h3>
                 <ComparisonBars />
             </div>
 
             {/* ── Digital Twin Supercapacitor Diagram ── */}
             <div className="lr-banner glass-card fade-in fade-in-d2" style={{ textAlign: 'center' }}>
-                <h3 className="lr-banner-title">🔋 Digital Twin Architecture for Supercapacitor Modeling</h3>
+                <h3 className="lr-banner-title">🔋 Offline Digital Twin Architecture for Supercapacitor Modeling</h3>
                 <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 18, maxWidth: 600, marginLeft: 'auto', marginRight: 'auto' }}>
-                    Bidirectional data flow between the physical supercapacitor and its PI‑LSTM digital twin — sensor data feeds the model, predictions drive optimization.
+                    Offline workflow: historical data trains the PI‑LSTM digital twin — all training and parameter identification performed offline, deployed as a fast surrogate.
                 </p>
                 <DigitalTwinSuperCapSVG />
             </div>
