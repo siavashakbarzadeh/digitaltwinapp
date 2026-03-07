@@ -24,8 +24,8 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
     // Scenario Form State
     const [showAddForm, setShowAddForm] = useState(false);
     const [newScenario, setNewScenario] = useState({
-        name: 'سناریوی سفارشی جدید',
-        description: 'پروفایل بار تعریف شده توسط کاربر',
+        name: 'New Custom Scenario',
+        description: 'User-defined load profile.',
         profileType: 'User Defined',
         current: 50,
         duration: 60,
@@ -84,19 +84,19 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
     };
 
     return (
-        <div className="admin-panel fade-in" style={{ direction: 'rtl' }}>
+        <div className="admin-panel fade-in">
             {/* ── Admin Header ── */}
             <div className="admin-header-strip glass-card" style={{ display: 'flex', gap: '24px', padding: '16px 28px', marginBottom: '24px', alignItems: 'center' }}>
-                <div style={{ flex: 1, textAlign: 'right' }}>
-                    <h2 style={{ fontSize: '1.4rem', margin: 0, color: 'var(--cyan)' }}>⚙️ مرکز عملیات دوقلوی دیجیتال</h2>
-                    <p style={{ fontSize: '0.85rem', opacity: 0.7, margin: '4px 0 0 0' }}>مدیریت متمرکز سناریوها، پارامترها و آموزش مدل‌های هوش مصنوعی</p>
+                <div style={{ flex: 1 }}>
+                    <h2 style={{ fontSize: '1.4rem', margin: 0, color: 'var(--cyan)' }}>⚙️ Digital Twin Operations Center</h2>
+                    <p style={{ fontSize: '0.85rem', opacity: 0.7, margin: '4px 0 0 0' }}>Centralized management for scenarios, parameters, and AI model training.</p>
                 </div>
-                <div className="admin-tabs" style={{ display: 'flex', gap: '8px', direction: 'ltr' }}>
+                <div className="admin-tabs" style={{ display: 'flex', gap: '8px' }}>
                     {[
-                        { id: 'scenarios', label: 'سناریوها', icon: '🗃️' },
-                        { id: 'config', label: 'تنظیمات قطعه', icon: '🛠️' },
-                        { id: 'training', label: 'آموزش مدل', icon: '🧠' },
-                        { id: 'logs', label: 'لاگ سیستم', icon: '📋' }
+                        { id: 'scenarios', label: 'Scenarios', icon: '🗃️' },
+                        { id: 'config', label: 'Asset Config', icon: '🛠️' },
+                        { id: 'training', label: 'Model Training', icon: '🧠' },
+                        { id: 'logs', label: 'System Logs', icon: '📋' }
                     ].map(t => (
                         <button
                             key={t.id}
@@ -123,12 +123,12 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                 </div>
             </div>
 
-            <div className="admin-content-window" style={{ textAlign: 'right' }}>
+            <div className="admin-content-window">
                 {/* ── Tab 1: Scenario Manager ── */}
                 {activeTab === 'scenarios' && (
                     <div className="tab-scenarios fade-in">
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', alignItems: 'center' }}>
-                            <h3 style={{ fontSize: '1.1rem', margin: 0 }}>🗃️ لیست سناریوهای فعال ({scenarios.length})</h3>
+                            <h3 style={{ fontSize: '1.1rem', margin: 0 }}>🗃️ Active Scenario Library ({scenarios.length})</h3>
                             <div style={{ display: 'flex', gap: '12px' }}>
                                 <button
                                     onClick={() => {
@@ -141,14 +141,14 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                                     }}
                                     className="btn-outline"
                                 >
-                                    📤 خروجی JSON
+                                    📤 Export JSON
                                 </button>
                                 <button
                                     onClick={() => setShowAddForm(!showAddForm)}
                                     className="btn-primary"
                                     style={{ background: 'var(--cyan)', color: '#000', fontWeight: 700 }}
                                 >
-                                    {showAddForm ? 'انصراف' : '+ ایجاد پروفایل جدید'}
+                                    {showAddForm ? 'Cancel' : '+ New Profile'}
                                 </button>
                             </div>
                         </div>
@@ -157,7 +157,7 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                             <div className="glass-card fade-in" style={{ padding: '28px', marginBottom: '28px', border: '1px solid var(--cyan-dim)', background: 'rgba(0,212,255,0.02)' }}>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                                     <div className="form-group">
-                                        <label>نام سناریو</label>
+                                        <label>Scenario Name</label>
                                         <input
                                             type="text"
                                             value={newScenario.name}
@@ -165,27 +165,27 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>نوع قطعه</label>
+                                        <label>Asset Type</label>
                                         <select
                                             value={newScenario.assetType}
                                             onChange={e => setNewScenario({ ...newScenario, assetType: e.target.value as AssetType })}
                                         >
-                                            <option value="supercapacitor">ابرخازن (Supercapacitor)</option>
-                                            <option value="battery">باتری لیتیومی (Battery)</option>
+                                            <option value="supercapacitor">Supercapacitor</option>
+                                            <option value="battery">Lithium Battery</option>
                                         </select>
                                     </div>
                                     <div className="form-group">
-                                        <label>وضعیت فیزیکی</label>
+                                        <label>Physical Condition</label>
                                         <select
                                             value={newScenario.condition}
                                             onChange={e => setNewScenario({ ...newScenario, condition: e.target.value as DeviceCondition })}
                                         >
-                                            <option value="new">قطعه نو (New)</option>
-                                            <option value="aged">استهلاک یافته (Aged)</option>
+                                            <option value="new">Pristine (New)</option>
+                                            <option value="aged">Degraded (Aged)</option>
                                         </select>
                                     </div>
                                     <div className="form-group">
-                                        <label>جریان اسمی (A)</label>
+                                        <label>Nominal Current (A)</label>
                                         <input
                                             type="number"
                                             value={newScenario.current}
@@ -197,7 +197,7 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                                     onClick={handleAddScenario}
                                     style={{ marginTop: '24px', padding: '12px 32px', borderRadius: '8px', background: 'var(--emerald)', border: 'none', color: 'white', fontWeight: 700, cursor: 'pointer', fontSize: '1rem' }}
                                 >
-                                    تأیید و تزریق به دوقلوی دیجیتال
+                                    Confirm & Inject Scenario
                                 </button>
                             </div>
                         )}
@@ -206,21 +206,21 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                             {scenarios.map(s => (
                                 <div key={s.id} className={`glass-card scenario-card ${selectedScenarioId === s.id ? 'active' : ''}`}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div style={{ textAlign: 'right' }}>
+                                        <div>
                                             <h4 style={{ margin: '0 0 8px 0', fontSize: '1rem', color: s.accentColor }}>{s.name}</h4>
                                             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                                                <span className="badge">{s.assetType === 'supercapacitor' ? 'ابرخازن' : 'باتری'}</span>
+                                                <span className="badge">{s.assetType === 'supercapacitor' ? 'Supercap' : 'Battery'}</span>
                                                 <span className={`badge ${s.condition === 'new' ? 'green' : 'orange'}`}>
-                                                    {s.condition === 'new' ? 'نو' : 'فرسوده'}
+                                                    {s.condition === 'new' ? 'NEW' : 'AGED'}
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
                                     <div style={{ display: 'flex', gap: '10px' }}>
                                         <button onClick={() => onSelectScenario(s.id)} className={`btn-select ${selectedScenarioId === s.id ? 'active' : ''}`}>
-                                            {selectedScenarioId === s.id ? 'پروفایل فعال' : 'انتخاب سناریو'}
+                                            {selectedScenarioId === s.id ? 'ACTIVE PROFILE' : 'Select Scenario'}
                                         </button>
-                                        <button onClick={() => deleteScenario(s.id)} className="btn-delete">حذف</button>
+                                        <button onClick={() => deleteScenario(s.id)} className="btn-delete">Delete</button>
                                     </div>
                                 </div>
                             ))}
@@ -232,28 +232,28 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                 {activeTab === 'config' && (
                     <div className="tab-config fade-in">
                         <div className="glass-card" style={{ padding: '24px', marginBottom: '32px', background: 'linear-gradient(135deg, rgba(0,212,255,0.05), transparent)', borderLeft: '4px solid var(--cyan)' }}>
-                            <h3 style={{ fontSize: '1.2rem', marginBottom: '8px' }}>🛠️ تنظیم دقیق پارامترهای فیزیکی قطعه</h3>
+                            <h3 style={{ fontSize: '1.2rem', marginBottom: '8px' }}>🛠️ Physical Asset Parameter Tuning</h3>
                             <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', margin: 0 }}>
-                                این مقادیر به عنوان محدودیت‌های فیزیکی در تابع خطای (Loss Function) مدل PI-LSTM استفاده می‌شوند.
+                                These values serve as physical constraints in the PI-LSTM loss function and RLS regressor.
                             </p>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '28px' }}>
                             {Object.entries(assetParams).map(([type, conditions]) => (
                                 <div key={type} className="glass-card" style={{ padding: '28px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                    <h4 style={{ fontSize: '1rem', color: 'var(--cyan)', marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
-                                        مشخصات فنی {type === 'supercapacitor' ? 'ابرخازن' : 'باتری'}
+                                    <h4 style={{ fontSize: '1rem', color: 'var(--cyan)', marginBottom: '24px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', textTransform: 'capitalize' }}>
+                                        {type} Specifications
                                     </h4>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }}>
                                         {Object.entries(conditions).map(([cond, params]) => (
                                             <div key={cond}>
-                                                <h5 style={{ fontSize: '0.85rem', marginBottom: '16px', color: cond === 'new' ? 'var(--emerald)' : 'var(--amber)', fontWeight: 700 }}>
-                                                    {cond === 'new' ? 'حالت نو' : 'حالت مستهلک'}
+                                                <h5 style={{ fontSize: '0.85rem', marginBottom: '16px', color: cond === 'new' ? 'var(--emerald)' : 'var(--amber)', fontWeight: 700, textTransform: 'uppercase' }}>
+                                                    {cond} State
                                                 </h5>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                                     {Object.entries(params).map(([key, val]) => (
                                                         <div key={key}>
-                                                            <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>پارامتر {key}</label>
+                                                            <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>{key} Parameter</label>
                                                             <input
                                                                 type="number"
                                                                 step="0.0001"
@@ -278,34 +278,34 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                     <div className="tab-training fade-in" style={{ padding: '20px' }}>
                         <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 40px auto' }}>
                             <div className="brain-animation">🧠</div>
-                            <h3 style={{ fontSize: '1.6rem', marginBottom: '16px' }}>کنسول آموزش مدل PI-LSTM (Offline)</h3>
+                            <h3 style={{ fontSize: '1.6rem', marginBottom: '16px' }}>PI-LSTM Offline Training Console</h3>
                             <p style={{ fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '40px', lineHeight: 1.8 }}>
-                                با استفاده از محدودیت‌های فیزیکی تعریف شده، شبکه عصبی را مجدداً آموزش دهید تا جابجایی پارامترها (Parameter Drift) ناشی از پیری قطعه را یاد بگیرد.
+                                Re-train the neural surrogate using established physical constraints. This helps the model capture parameter drift caused by hardware aging.
                             </p>
 
                             {isTraining ? (
                                 <div className="training-active-card">
                                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '12px' }}>
-                                        <span style={{ color: 'var(--cyan)' }}>در حال بهینه‌سازی وزن‌های شبکه عصبی...</span>
+                                        <span style={{ color: 'var(--cyan)' }}>Optimizing neural network weights...</span>
                                         <span style={{ fontWeight: 800 }}>{Math.floor(trainingProgress)}%</span>
                                     </div>
                                     <div className="progress-bar-container">
                                         <div className="progress-bar-fill" style={{ width: `${trainingProgress}%` }} />
                                     </div>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginTop: '20px' }}>
-                                        <div style={{ textAlign: 'right' }}>
-                                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>اِپاک (Epoch)</div>
+                                        <div>
+                                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Current Epoch</div>
                                             <div style={{ fontSize: '1.1rem', color: 'var(--cyan)', fontWeight: 700 }}>{Math.floor(trainingProgress / 5)} / 20</div>
                                         </div>
-                                        <div style={{ textAlign: 'left' }}>
-                                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>خطای فیزیکی (Residual)</div>
+                                        <div>
+                                            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Physics Residual (MSE)</div>
                                             <div style={{ fontSize: '1.1rem', color: 'var(--emerald)', fontWeight: 700 }}>{(0.012 * (1 - trainingProgress / 100)).toFixed(6)}</div>
                                         </div>
                                     </div>
                                 </div>
                             ) : (
                                 <button onClick={handleRunTraining} className="btn-train-heavy">
-                                    شروع فرآیند یادگیری فیزیک-محور
+                                    Execute Physics-Informed Retraining
                                 </button>
                             )}
                         </div>
@@ -313,20 +313,20 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '28px' }}>
                             <div className="glass-card" style={{ padding: '28px' }}>
                                 <h4 style={{ fontSize: '1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <span style={{ color: 'var(--emerald)' }}>●</span> تاریخچه آموزش‌های اخیر
+                                    <span style={{ color: 'var(--emerald)' }}>●</span> Recent Training History
                                 </h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                     {[
-                                        { app: 'PI-LSTM Framework', ts: '۱۴۰۲/۱۲/۱۷ ۰۹:۲۰', acc: 'دقت ۹۹.۱٪', status: 'بهینه' },
-                                        { app: 'Sequential LSTM', ts: '۱۴۰۲/۱۲/۱۷ ۰۹:۱۵', acc: 'دقت ۹۵.۵٪', status: 'ناپایدار' },
-                                        { app: 'Transfer Learning', ts: '۱۴۰۲/۱۲/۱۶ ۲۲:۴۰', acc: 'دقت ۹۷.۲٪', status: 'پایدار' },
+                                        { app: 'PI-LSTM Framework', ts: '2024-03-07 09:20', acc: '99.1% Fid.', status: 'Optimal' },
+                                        { app: 'Sequential LSTM', ts: '2024-03-07 09:15', acc: '95.5% Fid.', status: 'Unstable' },
+                                        { app: 'Transfer Learning', ts: '2024-03-06 22:40', acc: '97.2% Fid.', status: 'Stable' },
                                     ].map((h, i) => (
                                         <div key={i} className="history-item">
-                                            <div style={{ textAlign: 'right' }}>
+                                            <div>
                                                 <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>{h.app}</div>
                                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{h.ts}</div>
                                             </div>
-                                            <div style={{ textAlign: 'left' }}>
+                                            <div style={{ textAlign: 'right' }}>
                                                 <div style={{ fontSize: '0.9rem', color: i === 0 ? 'var(--emerald)' : 'var(--text-secondary)' }}>{h.acc}</div>
                                                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{h.status}</div>
                                             </div>
@@ -336,24 +336,24 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                             </div>
                             <div className="glass-card" style={{ padding: '28px' }}>
                                 <h4 style={{ fontSize: '1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <span style={{ color: 'var(--rose)' }}>●</span> مانیتورینگ سخت‌افزار (Telemetry)
+                                    <span style={{ color: 'var(--rose)' }}>●</span> Hardware Telemetry
                                 </h4>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                                     <div className="telemetry-box">
-                                        <label>دمای هسته پردازشی</label>
-                                        <span style={{ color: isTraining ? 'var(--rose)' : 'var(--emerald)' }}>{isTraining ? '۷۸°C' : '۳۴°C'}</span>
+                                        <label>Compute Core Temp</label>
+                                        <span style={{ color: isTraining ? 'var(--rose)' : 'var(--emerald)' }}>{isTraining ? '78°C' : '34°C'}</span>
                                     </div>
                                     <div className="telemetry-box">
-                                        <label>مصرف حافظه VRAM</label>
-                                        <span style={{ color: 'var(--cyan)' }}>{isTraining ? '۱۰.۲ GB' : '۰.۸ GB'}</span>
+                                        <label>VRAM Allocation</label>
+                                        <span style={{ color: 'var(--cyan)' }}>{isTraining ? '10.2 GB' : '0.8 GB'}</span>
                                     </div>
                                     <div className="telemetry-box">
-                                        <label>پهنای باند حافظه</label>
-                                        <span style={{ color: 'var(--amber)' }}>{isTraining ? '۷۸۰ GB/s' : '۱۲ GB/s'}</span>
+                                        <label>Memory Bandwidth</label>
+                                        <span style={{ color: 'var(--amber)' }}>{isTraining ? '780 GB/s' : '12 GB/s'}</span>
                                     </div>
                                     <div className="telemetry-box">
-                                        <label>سرعت آموزش (Speed)</label>
-                                        <span>{isTraining ? '۱۶۸ it/s' : '۰ it/s'}</span>
+                                        <label>Training Speed</label>
+                                        <span>{isTraining ? '168 it/s' : '0 it/s'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -366,20 +366,20 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                     <div className="tab-logs fade-in">
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
                             <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <span className="status-dot"></span> جریان رخدادهای لحظه‌ای (Live Stream)
+                                <span className="status-dot"></span> Real-time Event Stream
                             </h3>
-                            <button onClick={clearLogs} className="btn-clear">پاکسازی حافظه</button>
+                            <button onClick={clearLogs} className="btn-clear" style={{ background: 'rgba(244,63,94,0.1)', color: 'var(--rose)', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}>Clear Buffer</button>
                         </div>
-                        <div className="log-viewer glass-card">
+                        <div className="log-viewer glass-card" style={{ height: '500px', overflowY: 'auto', padding: '24px', background: '#060a13', fontFamily: 'monospace', border: '1px solid var(--border)' }}>
                             {logs.map((l, i) => (
-                                <div key={i} className="log-entry">
+                                <div key={i} className="log-entry" style={{ padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.02)', fontSize: '0.85rem', color: '#a5b4fc' }}>
                                     <span className="log-msg">{l}</span>
                                 </div>
                             ))}
                             {logs.length === 0 && (
                                 <div style={{ textAlign: 'center', marginTop: '140px', opacity: 0.5 }}>
                                     <div style={{ fontSize: '2.5rem', marginBottom: '15px' }}>📡</div>
-                                    <p>در انتظار رخدادهای سیستم...</p>
+                                    <p>Awaiting system events...</p>
                                 </div>
                             )}
                         </div>
@@ -389,7 +389,7 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
 
             <style>{`
                 .admin-panel {
-                    font-family: 'Inter', 'Vazir', sans-serif;
+                    font-family: 'Inter', sans-serif;
                 }
                 .scenario-card {
                     padding: 24px;
@@ -452,7 +452,7 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                     padding: 32px; background: rgba(0,212,255,0.04); border-radius: 16px; border: 1px solid var(--cyan-dim);
                 }
                 .progress-bar-container { height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden; }
-                .progress-bar-fill { height: 100%; background: linear-gradient(to left, var(--cyan), var(--emerald)); transition: width 0.3s; }
+                .progress-bar-fill { height: 100%; background: linear-gradient(to right, var(--cyan), var(--emerald)); transition: width 0.3s; }
 
                 .btn-train-heavy {
                     padding: 18px 48px; border-radius: 12px; background: linear-gradient(135deg, var(--cyan), var(--violet));
@@ -471,8 +471,13 @@ export default function AdminPanel({ selectedScenarioId, onSelectScenario }: Adm
                 .telemetry-box label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 6px; }
                 .telemetry-box span { font-size: 1.4rem; font-weight: 900; }
 
-                .log-viewer { height: 500px; overflow-y: auto; padding: 24px; background: #060a13; font-family: monospace; border: 1px solid var(--border); }
-                .log-entry { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.85rem; color: #a5b4fc; }
+                .status-dot {
+                    width: 8px;
+                    height: 8px;
+                    background: var(--emerald);
+                    border-radius: 50%;
+                    box-shadow: 0 0 10px var(--emerald);
+                }
             `}</style>
         </div>
     );

@@ -1,16 +1,12 @@
-import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
     ResponsiveContainer, BarChart, Bar, Cell, AreaChart, Area
 } from 'recharts';
 import {
-    scenarios, ASSET_PARAMS, TRUE_PARAMS,
-    trainingEfficiency,
+    ASSET_PARAMS, TRUE_PARAMS,
 } from '../data/scenarios';
-import type { DataPoint } from '../data/scenarios';
-import { mae, rmse, rSquared } from '../utils/metrics';
 import { createRLS, rlsUpdateEnhanced } from '../utils/rlsEstimator';
-import ParameterChart from '../components/ParameterChart';
 
 /* ── Online Twin Constants ── */
 const DT = 0.1;      // seconds per step
@@ -237,24 +233,24 @@ export default function DigitalTwinHub() {
 
                     <div className="glass-card" style={{ marginTop: '32px', padding: '32px' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
-                            <div style={{ textAlign: 'right', direction: 'rtl' }}>
-                                <h3 style={{ color: 'var(--cyan)', marginBottom: '16px' }}>🏁 نتیجه‌گیری و نوآوری فریم‌ورک</h3>
+                            <div>
+                                <h3 style={{ color: 'var(--cyan)', marginBottom: '16px' }}>🏁 Conclusion & Framework Novelty</h3>
                                 <p style={{ fontSize: '0.95rem', lineHeight: 1.8, opacity: 0.9 }}>
-                                    این سامانه با ترکیب شناسایی آفلاین (DE) و بهبود آنلاین (RLS)، شکاف بین مدل‌های فیزیکی دقیق و سیستم‌های بلادرنگ را پر می‌کند.
-                                    استفاده از **Warm Start** از مرحله آفلاین، سرعت همگرایی را ۳ تا ۵ برابر افزایش داده و پایداری سیستم را در گذارهای سریع جریان تضمین می‌کند.
+                                    This system bridges the gap between precision physical models and real-time adaptive systems by combining offline identification (DE) with online refinement (RLS).
+                                    Using a **Warm Start** from the offline stage increases convergence speed by 3-5x and ensures stability during rapid current transients.
                                 </p>
                                 <ul style={{ marginTop: '16px', listStyle: 'none', padding: 0 }}>
-                                    <li style={{ marginBottom: '8px' }}>✅ همگرایی زیر ۵۰ نمونه (کمتر از ۵ ثانیه)</li>
-                                    <li style={{ marginBottom: '8px' }}>✅ میانگین خطای کمتر از ۱۰ میلی‌ولت</li>
-                                    <li>✅ بار محاسباتی ناچیز (کمتر از ۱۰۰ میکروثانیه) مناسب برای BMS</li>
+                                    <li style={{ marginBottom: '8px' }}>✅ Convergence within 50 samples (&lt;5 seconds)</li>
+                                    <li style={{ marginBottom: '8px' }}>✅ Average reconstruction error &lt;10 mV</li>
+                                    <li>✅ Negligible computational burden (&lt;100 µs), ideal for BMS</li>
                                 </ul>
                             </div>
                             <div style={{ borderLeft: '1px solid var(--border)', paddingLeft: '32px' }}>
                                 <h3 style={{ color: 'var(--amber)', marginBottom: '16px' }}>Framework Contribution</h3>
                                 <p style={{ fontSize: '0.85rem', opacity: 0.8, lineHeight: 1.6 }}>
-                                    1. <strong>Physics-Guided Regressor:</strong> Direct mapping from RC equations.<br />
-                                    2. <strong>Adaptive $\lambda$:</strong> Fast tracking during transients, high precision in steady-state.<br />
-                                    3. <strong>Hybdrid Layering:</strong> Offline DE for stabilization, Online RLS for adaptation.
+                                    1. <strong>Physics-Guided Regressor:</strong> Direct mapping from RC equations ensures physical consistency.<br />
+                                    2. <strong>Adaptive $\lambda$:</strong> Fast tracking during transients, high precision in steady-state operations.<br />
+                                    3. <strong>Hybrid Layering:</strong> Offline DE for stabilization, Online RLS for real-time adaptation.
                                 </p>
                             </div>
                         </div>
