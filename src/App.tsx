@@ -1,6 +1,6 @@
 import AssetOverview from './pages/AssetOverview';
 import DigitalTwinView from './pages/DigitalTwinView';
-import ScenarioSelector from './pages/ScenarioSelector';
+import AdminPanel from './pages/AdminPanel';
 import InfoExplanation from './pages/InfoExplanation';
 import ComparisonView from './pages/ComparisonView';
 import LiteratureReview from './pages/LiteratureReview';
@@ -91,7 +91,7 @@ export default function App() {
         { id: 'online_twin' as Tab, icon: '🏗️', label: 'Online Parameters', shortcut: '4' },
         { id: 'twin_view' as Tab, icon: '📈', label: 'Twin View', shortcut: '5' },
         { id: 'comparison' as Tab, icon: '⚖️', label: 'Compare', shortcut: '6' },
-        { id: 'scenarios' as Tab, icon: '⚡', label: 'Scenarios', shortcut: '7' },
+        { id: 'scenarios' as Tab, icon: '⚙️', label: 'Admin Panel', shortcut: '7' },
         { id: 'info' as Tab, icon: 'ℹ️', label: 'About', shortcut: '8' },
     ];
 
@@ -178,7 +178,7 @@ export default function App() {
                         />
                     )}
                     {tab === 'scenarios' && (
-                        <ScenarioSelector
+                        <AdminPanel
                             selectedScenarioId={selectedScenarioId}
                             onSelectScenario={(id: string) => {
                                 handleScenarioSelect(id);
