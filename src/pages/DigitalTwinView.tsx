@@ -3,10 +3,12 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
     ResponsiveContainer, AreaChart, Area,
 } from 'recharts';
-import { scenarios, type DataPoint, type Scenario } from '../data/scenarios';
+import { type DataPoint, type Scenario } from '../data/scenarios';
 import { mae, rmse, rSquared } from '../utils/metrics';
 import VoltageChart from '../components/VoltageChart';
-import { createRLS, rlsUpdate, thetaToPhysical } from '../utils/rlsEstimator';
+import { createRLS, rlsUpdate, mapToPhysicalSC } from '../utils/rlsEstimator';
+import { useSimulation } from '../context/SimulationContext';
+import AnimatedSuperCap from '../components/AnimatedSuperCap';
 
 /* ═══════════════════════════════════════════════════
    Digital Twin View — Time-Series Plots
@@ -37,9 +39,10 @@ function MiniTooltip({ active, payload, label }: any) {
 }
 
 export default function DigitalTwinView({ selectedScenarioId }: Props) {
+    const { scenarios } = useSimulation();
     const scenario = useMemo(
         (): Scenario => scenarios.find((s) => s.id === selectedScenarioId) ?? scenarios[0],
-        [selectedScenarioId]
+        [selectedScenarioId, scenarios]
     );
 
     /* Chart data */
@@ -81,20 +84,24 @@ export default function DigitalTwinView({ selectedScenarioId }: Props) {
 
     /* RLS Estimation Analysis (Running RLS on the chosen scenario data) */
     const rlsAnalysisData = useMemo(() => {
-        let rls = createRLS(0.995, 0.9995, 0.005, 500);
+        // Initial guess [Rs, C0, K]
+        let rls = createRLS(0.995, [0.0002, 3000, 20], 500);
         let vModel = 0.5;
         const dt = scenario.data.length > 1 ? scenario.data[1].time - scenario.data[0].time : 0.1;
 
         return scenario.data.map((d: DataPoint) => {
-            const phi: [number, number] = [vModel, d.current];
+            // Regressor: [i, 1/vc, vc*i]
+            const phi = [d.current, (d.current * dt) / (vModel || 0.1), Math.abs(vModel) * (d.current * dt)];
             rls = rlsUpdate(rls, phi, d.measuredVoltage);
-            const phys = thetaToPhysical(rls.theta, dt);
-            vModel = rls.theta[0] * vModel + rls.theta[1] * d.current;
+
+            // Map to physical: theta[0]=Rs, theta[1]=C0, theta[2]=K
+            vModel = rls.theta[0] * d.current + (vModel + (d.current * dt) / (rls.theta[1] + rls.theta[2] * Math.abs(vModel)));
 
             return {
                 time: d.time,
-                estC: phys.C,
-                estR: phys.R * 1000, // mOhm
+                estC: rls.theta[1],
+                estR: rls.theta[0] * 1000, // mOhm
+                estK: rls.theta[2]
             };
         });
     }, [scenario]);

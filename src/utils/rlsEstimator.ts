@@ -1,77 +1,124 @@
-/* ── RLS (Recursive Least Squares) estimator ──
-   Estimates parameters [a, b] of the discrete linear RC model:
-     V[k+1] = a · V[k] + b · I[k]
-   where  a = 1 − dt/(RC),   b = dt/C
-   From which:  C = dt / b,   R = b / (1 − a)
+/* ── Generic RLS (Recursive Least Squares) estimator ──
+   Supports N-dimensional parameter vector theta.
+   Target model: y[k] = phi[k]^T * theta
 */
 
 export interface RLSState {
-    theta: [number, number];
-    P: number[][];
-    lambda: number;
+    theta: number[];
+    P: number[][]; // Covariance matrix (N x N)
+    lambda: number; // Forgetting factor
 }
 
+/** 
+ * Create a new RLS state
+ * @param lambda Forgetting factor (0.9 to 1.0)
+ * @param initTheta Initial parameter values
+ * @param pScale Initial covariance scale (large for uncertainty)
+ */
 export function createRLS(
-    lambda = 0.99,
-    initA = 0.9995,
-    initB = 0.004,
-    pScale = 500,
+    lambda: number,
+    initTheta: number[],
+    pScale = 1000
 ): RLSState {
+    const n = initTheta.length;
+    const P = Array(n).fill(0).map((_, i) =>
+        Array(n).fill(0).map((_, j) => (i === j ? pScale : 0))
+    );
+
     return {
-        theta: [initA, initB],
-        P: [
-            [pScale, 0],
-            [0, pScale],
-        ],
+        theta: [...initTheta],
+        P,
         lambda,
     };
 }
 
+/**
+ * Standard RLS Update step
+ * @param st Current RLS state
+ * @param phi Regressor vector (N dimensions)
+ * @param y Measured output scalar
+ */
 export function rlsUpdate(
     st: RLSState,
-    phi: [number, number],
-    y: number,
+    phi: number[],
+    y: number
 ): RLSState {
     const { theta, P, lambda } = st;
+    const n = theta.length;
 
-    /* P · φ  (2×1) */
-    const Pp0 = P[0][0] * phi[0] + P[0][1] * phi[1];
-    const Pp1 = P[1][0] * phi[0] + P[1][1] * phi[1];
+    // 1. Calculate P * phi -> (n x 1)
+    const Pphi = Array(n).fill(0);
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            Pphi[i] += P[i][j] * phi[j];
+        }
+    }
 
-    /* denominator  λ + φᵀ P φ */
-    const d = lambda + phi[0] * Pp0 + phi[1] * Pp1;
+    // 2. Denominator: lambda + phi^T * P * phi
+    let denom = lambda;
+    for (let i = 0; i < n; i++) {
+        denom += phi[i] * Pphi[i];
+    }
 
-    /* Kalman gain */
-    const K0 = Pp0 / d;
-    const K1 = Pp1 / d;
+    // 3. Kalman Gain: K = P * phi / denom
+    const K = Pphi.map(v => v / denom);
 
-    /* prediction error */
-    const e = y - (theta[0] * phi[0] + theta[1] * phi[1]);
+    // 4. Prediction error: e = y - phi^T * theta
+    let pred = 0;
+    for (let i = 0; i < n; i++) {
+        pred += phi[i] * theta[i];
+    }
+    const e = y - pred;
 
-    /* θ update */
-    const newTheta: [number, number] = [theta[0] + K0 * e, theta[1] + K1 * e];
+    // 5. Update theta: theta = theta + K * e
+    const newTheta = theta.map((v, i) => v + K[i] * e);
 
-    /* P update   (P − K φᵀ P) / λ */
-    const phiP00 = phi[0] * P[0][0] + phi[1] * P[1][0];
-    const phiP01 = phi[0] * P[0][1] + phi[1] * P[1][1];
+    // 6. Update P: P = (P - K * phi^T * P) / lambda
+    // Precompute phi^T * P -> (1 x n)
+    const phiTP = Array(n).fill(0);
+    for (let j = 0; j < n; j++) {
+        for (let i = 0; i < n; i++) {
+            phiTP[j] += phi[i] * P[i][j];
+        }
+    }
 
-    const newP = [
-        [(P[0][0] - K0 * phiP00) / lambda, (P[0][1] - K0 * phiP01) / lambda],
-        [(P[1][0] - K1 * phiP00) / lambda, (P[1][1] - K1 * phiP01) / lambda],
-    ];
+    const newP = Array(n).fill(0).map((_, i) =>
+        Array(n).fill(0).map((_, j) =>
+            (P[i][j] - K[i] * phiTP[j]) / lambda
+        )
+    );
 
     return { theta: newTheta, P: newP, lambda };
 }
 
-/** Recover physical parameters from RLS θ */
-export function thetaToPhysical(
-    theta: [number, number],
-    dt: number,
-): { C: number; R: number } {
-    const b = Math.max(theta[1], 1e-12);
-    const a = theta[0];
-    const C = dt / b;
-    const oneMinusA = Math.max(1 - a, 1e-12);
-    const R = b / oneMinusA;
-    return { C, R };
+/**
+ * Enhanced RLS Update with projection and adaptive lambda
+ */
+export function rlsUpdateEnhanced(
+    st: RLSState,
+    phi: number[],
+    y: number,
+    lambda: number,
+    bounds: { min: number[], max: number[] }
+): RLSState {
+    const updated = rlsUpdate({ ...st, lambda }, phi, y);
+
+    // Parameter Projection (Clipping)
+    const projectedTheta = updated.theta.map((v, i) =>
+        Math.max(bounds.min[i], Math.min(bounds.max[i], v))
+    );
+
+    return { ...updated, theta: projectedTheta };
+}
+
+/** 
+ * Map theta [theta1, theta2, theta3] to physical SC parameters [Rs, C0, K]
+ * Based on the discrete model matching the report's 3x3 requirement.
+ */
+export function mapToPhysicalSC(theta: number[], dt: number): { Rs: number; C0: number; K: number } {
+    return {
+        Rs: theta[0],
+        C0: Math.max(10, theta[1]),
+        K: theta[2] || 0
+    };
 }

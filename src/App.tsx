@@ -9,11 +9,11 @@ import OnlineTwin from './pages/OnlineTwin';
 import { scenarios, Scenario, AssetType, DeviceCondition } from './data/scenarios';
 import { useState, useEffect, useCallback } from 'react';
 import { mae, rmse } from './utils/metrics';
-
-import { HistoryEntry } from './types';
-import { Tab } from './types';
+import { HistoryEntry, Tab } from './types';
+import { useSimulation } from './context/SimulationContext';
 
 export default function App() {
+    const { scenarios } = useSimulation();
     const [tab, setTab] = useState<Tab>('hub');
     const [selectedScenarioId, setSelectedScenarioId] = useState('sc-new-90a');
     const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -80,7 +80,7 @@ export default function App() {
             };
             setHistory((prev: HistoryEntry[]) => [entry, ...prev.slice(0, 4)]);
         }
-    }, []);
+    }, [scenarios]);
 
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -130,7 +130,9 @@ export default function App() {
                             </div>
                         )}
                         <label>Active Scenario</label>
-                        <strong>{scenarios.find(s => s.id === selectedScenarioId)?.name || 'None'}</strong>
+                        <strong style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {scenarios.find(s => s.id === selectedScenarioId)?.name || 'None'}
+                        </strong>
                         <button onClick={() => switchTab('scenarios')}>Change ↗</button>
                     </div>
                 </div>
