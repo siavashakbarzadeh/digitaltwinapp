@@ -87,8 +87,8 @@ export default function App() {
     const tabConfig = [
         { id: 'hub' as Tab, icon: '🏠', label: 'Master Hub', shortcut: '1' },
         { id: 'literature' as Tab, icon: '📖', label: 'Lit. Review', shortcut: '2' },
-        { id: 'offline_twin' as Tab, icon: '📊', label: 'Parameters', shortcut: '3' },
-        { id: 'online_twin' as Tab, icon: '🏗️', label: 'Digital Twin', shortcut: '4' },
+        { id: 'offline_twin' as Tab, icon: '📊', label: 'Offline Parameters', shortcut: '3' },
+        { id: 'online_twin' as Tab, icon: '🏗️', label: 'Online Parameters', shortcut: '4' },
         { id: 'twin_view' as Tab, icon: '📈', label: 'Twin View', shortcut: '5' },
         { id: 'comparison' as Tab, icon: '⚖️', label: 'Compare', shortcut: '6' },
         { id: 'scenarios' as Tab, icon: '⚡', label: 'Scenarios', shortcut: '7' },
