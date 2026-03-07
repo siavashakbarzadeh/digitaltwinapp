@@ -266,23 +266,6 @@ export default function OfflineTwin() {
                 </div>
             </div>
 
-            {/* ════════ 5. SCENARIO SELECTOR ════════ */}
-            <h2 className="section-title" style={{ marginTop: 36 }}>Performance Evaluation</h2>
-            <p className="section-subtitle">
-                §4 — Select an excitation profile to compare measured voltage with LSTM
-                and PI‑LSTM reconstructions. The 90 A profile is the primary evaluation;
-                20 / 60 / 140 A profiles are Simulink validation cases.
-            </p>
-
-            <div className="scenario-grid">
-                {scenarios.map((s) => (
-                    <ProfileCard
-                        key={s.id} s={s}
-                        selected={s.id === selectedId}
-                        onClick={() => setSelectedId(s.id)}
-                    />
-                ))}
-            </div>
 
             {/* ════════ 6. COMPARATIVE METRICS ════════ */}
             <div className="metrics-compare fade-in">
