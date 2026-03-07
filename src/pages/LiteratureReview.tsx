@@ -713,7 +713,7 @@ export default function LiteratureReview() {
 
             {/* ── Digital Twin Supercapacitor Diagram ── */}
             <div className="lr-banner glass-card fade-in fade-in-d2" style={{ textAlign: 'center' }}>
-                <h3 className="lr-banner-title">🔋 Offline Digital Twin Architecture for Supercapacitor Modeling</h3>
+                <h3 className="lr-banner-title"><span className="battery-large-charging" style={{ fontSize: '3rem !important' }}>🔋</span> Offline Digital Twin Architecture</h3>
                 <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: 18, maxWidth: 600, marginLeft: 'auto', marginRight: 'auto' }}>
                     Offline workflow: historical data trains the PI‑LSTM digital twin — all training and parameter identification performed offline, deployed as a fast surrogate.
                 </p>
@@ -725,7 +725,9 @@ export default function LiteratureReview() {
                 <div key={sec.id} className={`lr-section glass-card fade-in fade-in-d${Math.min(si + 1, 8)}`}>
                     <button className="lr-sec-header" onClick={() => toggle(sec.id)}
                         style={{ '--sec-color': sec.color } as React.CSSProperties}>
-                        <span className="lr-sec-icon" style={{ background: `${sec.color}18`, borderColor: `${sec.color}30` }}>{sec.icon}</span>
+                        <span className="lr-sec-icon" style={{ background: `${sec.color}18`, borderColor: `${sec.color}30` }}>
+                            {sec.icon === '🔋' ? <span className="battery-large-charging" style={{ fontSize: '1.5rem !important' }}>🔋</span> : sec.icon}
+                        </span>
                         <span className="lr-sec-num">{sec.num ? `§${sec.num}` : ''}</span>
                         <span className="lr-sec-title">{sec.title}</span>
                         <span className={`lr-chevron ${open[sec.id] ? 'open' : ''}`}>▾</span>
@@ -771,7 +773,7 @@ export default function LiteratureReview() {
                                             {'threeComponents' in sub && sub.threeComponents && (
                                                 <div className="lr-three-grid">{sub.threeComponents.map((c: { icon: string; label: string; desc: string }, i: number) => (
                                                     <div key={i} className="lr-comp-card glass-card">
-                                                        <span className="lr-comp-icon">{c.icon}</span>
+                                                        <span className="lr-comp-icon">{c.icon === '🔋' ? <span className="battery-large-charging" style={{ fontSize: '2rem !important' }}>🔋</span> : c.icon}</span>
                                                         <strong>{c.label}</strong><p>{c.desc}</p>
                                                     </div>
                                                 ))}</div>
@@ -782,7 +784,7 @@ export default function LiteratureReview() {
                                                     <h4 className="lr-features-label">Key Technical Features</h4>
                                                     <div className="lr-feat-grid">{sub.features.map((f: { icon: string; label: string; desc: string }, i: number) => (
                                                         <div key={i} className="lr-feat">
-                                                            <span className="lr-feat-icon">{f.icon}</span>
+                                                            <span className="lr-feat-icon">{f.icon === '🔋' ? <span className="battery-large-charging" style={{ fontSize: '2rem !important' }}>🔋</span> : f.icon}</span>
                                                             <div><strong>{f.label}</strong><p>{f.desc}</p></div>
                                                         </div>
                                                     ))}</div>
@@ -824,7 +826,7 @@ export default function LiteratureReview() {
                                             {'cards' in sub && sub.cards && (
                                                 <div className="lr-cards-grid">{sub.cards.map((c: { icon: string; label: string; desc: string }, i: number) => (
                                                     <div key={i} className="lr-info-card glass-card">
-                                                        <span className="lr-card-icon">{c.icon}</span>
+                                                        <span className="lr-card-icon">{c.icon === '🔋' ? <span className="battery-large-charging" style={{ fontSize: '2rem !important' }}>🔋</span> : c.icon}</span>
                                                         <strong>{c.label}</strong><p>{c.desc}</p>
                                                     </div>
                                                 ))}</div>

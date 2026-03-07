@@ -47,14 +47,19 @@ export default function AssetOverview({ selectedScenarioId, history, onSwitchTab
     return (
         <div className="fade-in">
             {/* ── Hero Info ── */}
-            <div className="dashboard-hero glass-card">
-                <div className="hero-badge">
-                    {scenario.assetType === 'supercapacitor' ? '⚡ Supercapacitor Mode' : '🔋 Battery Pack Mode'}
-                    <span className="badge-sep">|</span>
-                    {scenario.condition === 'new' ? '✨ Condition: New' : '⚠️ Condition: Aged'}
+            <div className="dashboard-hero glass-card" style={{ display: 'flex', alignItems: 'center', gap: '40px', padding: '40px' }}>
+                <div className="hero-visual">
+                    <span className="battery-large-charging">🔋</span>
                 </div>
-                <h1>{scenario.name}</h1>
-                <p>{scenario.description}</p>
+                <div style={{ flex: 1 }}>
+                    <div className="hero-badge">
+                        {scenario.assetType === 'supercapacitor' ? '⚡ Supercapacitor Mode' : '🔋 Battery Pack Mode'}
+                        <span className="badge-sep">|</span>
+                        {scenario.condition === 'new' ? '✨ Condition: New' : '⚠️ Condition: Aged'}
+                    </div>
+                    <h1 style={{ fontSize: '2.8rem', margin: '8px 0' }}>{scenario.name}</h1>
+                    <p style={{ fontSize: '1.1rem', opacity: 0.8 }}>{scenario.description}</p>
+                </div>
             </div>
 
             {/* ── Hub Module Grid ── */}
@@ -149,7 +154,7 @@ export default function AssetOverview({ selectedScenarioId, history, onSwitchTab
                                     <div className="history-time">{h.timestamp}</div>
                                     <div className="history-meta">
                                         <strong>{h.scenarioName}</strong>
-                                        <span>{h.assetType === 'battery' ? '🔋' : '⚡'} {h.condition}</span>
+                                        <span>{h.assetType === 'battery' ? <span className="battery-large-charging" style={{ fontSize: '1rem !important' }}>🔋</span> : '⚡'} {h.condition}</span>
                                     </div>
                                     <div className="history-score">
                                         MAE: <strong>{(h.mae * 1000).toFixed(1)} mV</strong>

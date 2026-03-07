@@ -123,7 +123,12 @@ export default function App() {
                 </nav>
 
                 <div className="sidebar-footer">
-                    <div className="active-scenario-card">
+                    <div className="active-scenario-card" style={{ position: 'relative' }}>
+                        {scenarios.find(s => s.id === selectedScenarioId)?.assetType === 'battery' && (
+                            <div style={{ position: 'absolute', top: '-20px', right: '-10px', zoom: 0.4 }}>
+                                <span className="battery-large-charging">🔋</span>
+                            </div>
+                        )}
                         <label>Active Scenario</label>
                         <strong>{scenarios.find(s => s.id === selectedScenarioId)?.name || 'None'}</strong>
                         <button onClick={() => switchTab('scenarios')}>Change ↗</button>

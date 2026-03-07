@@ -57,9 +57,8 @@ export default function InfoExplanation() {
                 <div style={{ position: 'absolute', top: '24px', left: '32px', zIndex: 2 }}>
                     <h3 style={{ fontSize: '1.4rem', color: '#fff', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{ width: '8px', height: '8px', background: '#00d4ff', borderRadius: '50%', boxShadow: '0 0 10px #00d4ff', animation: 'pulse 1.5s infinite' }}></span>
-                        AquaTalk / Supercapacitor Digital Twin
+                        Supercapacitor Digital Twin
                     </h3>
-                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginTop: '4px' }}>Cyber-Physical Isometric Mapping</p>
                 </div>
 
                 {/* Floating HUD Panel 1: Operations */}
@@ -126,7 +125,7 @@ export default function InfoExplanation() {
                     ⚡ PI-LSTM Node
                 </div>
                 <div style={{ position: 'absolute', top: '220px', left: '58%', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', padding: '4px 10px', borderRadius: '4px', fontSize: '0.7rem', zIndex: 2 }}>
-                    🔋 Cell Pack 2# (RLS)
+                    <span className="battery-large-charging" style={{ fontSize: '1rem !important' }}>🔋</span> Cell Pack 2# (RLS)
                 </div>
 
                 {/* Mini Charts HUD at bottom */}
@@ -190,7 +189,7 @@ export default function InfoExplanation() {
                 <h3 style={{ marginBottom: '32px', fontSize: '1.6rem', fontWeight: 600 }}>Architectural Workflow</h3>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
                     <div style={{ background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '16px', flex: '1 1 200px', border: '1px solid rgba(255,255,255,0.05)', transition: 'transform 0.3s ease' }}>
-                        <div style={{ fontSize: '2.5rem', marginBottom: '16px' }}>🔋</div>
+                        <div style={{ fontSize: '2.5rem', marginBottom: '16px' }}><span className="battery-large-charging" style={{ fontSize: '3rem !important' }}>🔋</span></div>
                         <h4 style={{ marginBottom: '8px', fontSize: '1.1rem' }}>Physical Asset</h4>
                         <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Supercapacitor / Li-Ion</span>
                     </div>
@@ -251,7 +250,7 @@ export default function InfoExplanation() {
 
             {/* ── Footer ── */}
             <footer className="fade-in fade-in-d4" style={{ marginTop: '60px', textAlign: 'center', opacity: 0.5, fontSize: '0.9rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px' }}>
-                <p style={{ marginBottom: '8px' }}>Designed for academic demonstration. 🔋 Supercapacitor & Battery Digital Twins</p>
+                <p style={{ marginBottom: '8px' }}>Designed for academic demonstration. <span className="battery-large-charging" style={{ fontSize: '1rem !important' }}>🔋</span> Supercapacitor & Battery Digital Twins</p>
                 <p>© 2024–2026 PhD Research Framework</p>
             </footer>
 

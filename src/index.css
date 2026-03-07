@@ -85,6 +85,36 @@ body::before {
   }
 }
 
+/* ── Massive Charging Battery Animation ── */
+@keyframes batteryCharge {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+    filter: grayscale(1) brightness(0.5);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: grayscale(0) brightness(1.2) drop-shadow(0 0 15px var(--emerald));
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+    filter: grayscale(1) brightness(0.5);
+  }
+}
+
+.battery-large-charging {
+  display: inline-block;
+  font-size: 5rem !important;
+  /* Very large as requested */
+  animation: batteryCharge 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  line-height: 1;
+  vertical-align: middle;
+}
+
 #root {
   position: relative;
   z-index: 1;

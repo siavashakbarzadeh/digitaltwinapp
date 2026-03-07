@@ -89,7 +89,7 @@ function simulate(
     return { time, current, voltage };
 }
 
-function buildScenario(
+export function buildScenario(
     id: string, name: string, description: string,
     profileType: string, currentAmplitude: string, accentColor: string,
     currentFn: (t: number) => number,
