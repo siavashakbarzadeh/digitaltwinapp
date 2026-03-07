@@ -67,6 +67,14 @@ export default function AssetOverview({ selectedScenarioId, history, onSwitchTab
                     </div>
                     <div className="hub-card-arrow">→</div>
                 </div>
+                <div className="hub-card glass-card" onClick={() => onSwitchTab('offline_twin')}>
+                    <div className="hub-card-icon">📊</div>
+                    <div className="hub-card-text">
+                        <h4>Offline Parameters</h4>
+                        <p>Deep-dive analysis of physics‑informed model accuracy.</p>
+                    </div>
+                    <div className="hub-card-arrow">→</div>
+                </div>
                 <div className="hub-card glass-card" onClick={() => onSwitchTab('online_twin')}>
                     <div className="hub-card-icon">🏗️</div>
                     <div className="hub-card-text">

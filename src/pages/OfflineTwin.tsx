@@ -94,7 +94,7 @@ export default function OfflineTwin() {
         <div className="fade-in">
             {/* ── Hero Banner ── */}
             <div className="offline-hero-banner fade-in">
-                <h2>📊 Offline Digital Twin — PI‑LSTM Framework</h2>
+                <h2>📊 Offline Parameters — PI‑LSTM Framework</h2>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', maxWidth: 560, lineHeight: 1.6 }}>
                     Physics-Informed LSTM framework for discrete-time supercapacitor voltage modelling.
                     Combines equivalent-circuit interpretability with LSTM sequence learning, avoiding

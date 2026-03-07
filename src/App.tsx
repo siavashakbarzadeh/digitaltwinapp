@@ -39,11 +39,12 @@ export default function App() {
             if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
             if (e.key === '1') switchTab('hub');
             else if (e.key === '2') switchTab('literature');
-            else if (e.key === '3') switchTab('online_twin');
-            else if (e.key === '4') switchTab('twin_view');
-            else if (e.key === '5') switchTab('comparison');
-            else if (e.key === '6') switchTab('scenarios');
-            else if (e.key === '7') switchTab('info');
+            else if (e.key === '3') switchTab('offline_twin');
+            else if (e.key === '4') switchTab('online_twin');
+            else if (e.key === '5') switchTab('twin_view');
+            else if (e.key === '6') switchTab('comparison');
+            else if (e.key === '7') switchTab('scenarios');
+            else if (e.key === '8') switchTab('info');
         };
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
@@ -86,11 +87,12 @@ export default function App() {
     const tabConfig = [
         { id: 'hub' as Tab, icon: '🏠', label: 'Master Hub', shortcut: '1' },
         { id: 'literature' as Tab, icon: '📖', label: 'Lit. Review', shortcut: '2' },
-        { id: 'online_twin' as Tab, icon: '🏗️', label: 'Digital Twin', shortcut: '3' },
-        { id: 'twin_view' as Tab, icon: '📈', label: 'Twin View', shortcut: '4' },
-        { id: 'comparison' as Tab, icon: '⚖️', label: 'Compare', shortcut: '5' },
-        { id: 'scenarios' as Tab, icon: '⚡', label: 'Scenarios', shortcut: '6' },
-        { id: 'info' as Tab, icon: 'ℹ️', label: 'About', shortcut: '7' },
+        { id: 'offline_twin' as Tab, icon: '📊', label: 'Parameters', shortcut: '3' },
+        { id: 'online_twin' as Tab, icon: '🏗️', label: 'Digital Twin', shortcut: '4' },
+        { id: 'twin_view' as Tab, icon: '📈', label: 'Twin View', shortcut: '5' },
+        { id: 'comparison' as Tab, icon: '⚖️', label: 'Compare', shortcut: '6' },
+        { id: 'scenarios' as Tab, icon: '⚡', label: 'Scenarios', shortcut: '7' },
+        { id: 'info' as Tab, icon: 'ℹ️', label: 'About', shortcut: '8' },
     ];
 
     return (
@@ -158,6 +160,7 @@ export default function App() {
                         />
                     )}
                     {tab === 'literature' && <LiteratureReview />}
+                    {tab === 'offline_twin' && <OfflineTwin />}
                     {tab === 'online_twin' && (
                         <OnlineTwin />
                     )}
