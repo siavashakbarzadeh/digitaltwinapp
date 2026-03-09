@@ -6,7 +6,7 @@ import {
 import { type DataPoint, type Scenario } from '../data/scenarios';
 import { mae, rmse, rSquared } from '../utils/metrics';
 import VoltageChart from '../components/VoltageChart';
-import { createRLS, rlsUpdate, mapToPhysicalSC } from '../utils/rlsEstimator';
+import { createRLS, rlsUpdate } from '../utils/rlsEstimator';
 import { useSimulation } from '../context/SimulationContext';
 import AnimatedSuperCap from '../components/AnimatedSuperCap';
 
@@ -85,23 +85,28 @@ export default function DigitalTwinView({ selectedScenarioId }: Props) {
     /* RLS Estimation Analysis (Running RLS on the chosen scenario data) */
     const rlsAnalysisData = useMemo(() => {
         // Initial guess [Rs, C0, K]
-        let rls = createRLS(0.995, [0.0002, 3000, 20], 500);
-        let vModel = 0.5;
+        let rls = createRLS(0.995, [0.00022, 3000, 20], 500);
+        let v_c = 0.5;
         const dt = scenario.data.length > 1 ? scenario.data[1].time - scenario.data[0].time : 0.1;
 
         return scenario.data.map((d: DataPoint) => {
-            // Regressor: [i, 1/vc, vc*i]
-            const phi = [d.current, (d.current * dt) / (vModel || 0.1), Math.abs(vModel) * (d.current * dt)];
+            // Regressor: [i, i*dt/(v_c), |v_c|*i*dt]
+            const phi = [d.current, (d.current * dt) / (v_c || 0.1), Math.abs(v_c) * (d.current * dt)];
             rls = rlsUpdate(rls, phi, d.measuredVoltage);
 
-            // Map to physical: theta[0]=Rs, theta[1]=C0, theta[2]=K
-            vModel = rls.theta[0] * d.current + (vModel + (d.current * dt) / (rls.theta[1] + rls.theta[2] * Math.abs(vModel)));
+            const rs_est = rls.theta[0];
+            const c0_est = rls.theta[1];
+            const k_est = rls.theta[2];
+
+            // Internal voltage update: v_c[k+1] = v_c[k] + (i*dt)/(c0 + k*|v_c|)
+            const c_eff = Math.max(10, c0_est + k_est * Math.abs(v_c));
+            v_c = v_c + (d.current * dt) / c_eff;
 
             return {
                 time: d.time,
-                estC: rls.theta[1],
-                estR: rls.theta[0] * 1000, // mOhm
-                estK: rls.theta[2]
+                estC: c0_est,
+                estR: rs_est * 1000, // mOhm
+                estK: k_est
             };
         });
     }, [scenario]);
@@ -169,10 +174,11 @@ export default function DigitalTwinView({ selectedScenarioId }: Props) {
                     <div style={{ flex: '1.2', minWidth: '300px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                             <div className="rls-pulse-icon">📡</div>
-                            <h2 style={{ color: 'var(--cyan)', margin: 0 }}>مدلسازی آنلاین RLS (Recursive Least Squares)</h2>
+                            <h2 style={{ color: 'var(--cyan)', margin: 0 }}>Online RLS (Recursive Least Squares) Modeling</h2>
                         </div>
-                        <p style={{ fontSize: '1rem', opacity: 0.9, lineHeight: '1.8', marginBottom: '20px', textAlign: 'right', direction: 'rtl' }}>
-                            در حالی که مدل <strong>PI-LSTM</strong> وظیفه یادگیری رفتارهای پیچیده و غیرخطی را در حالت آفلاین دارد، الگوریتم <strong>RLS</strong> به عنوان یک ابزار قدرتمند برای **ردیابی آنلاین پارامترها** عمل می‌کند. این الگوریتم با هر پالس داده، ضرایب مدل فیزیکی ($R_s$ و $C_0$) را با استفاده از فاکتور فراموشی ($\lambda$) بروزرسانی می‌کند تا اثرات نویز و تغییرات لحظه‌ای را خنثی کند.
+                        <p style={{ fontSize: '1rem', opacity: 0.9, lineHeight: '1.8', marginBottom: '20px' }}>
+                            While the <strong>PI-LSTM</strong> model learns complex non-linear behaviors offline, the <strong>RLS</strong> algorithm serves as a robust tool for <strong>online parameter tracking</strong>.
+                            It updates physical parameters ($R_s$ and $C_0$) at each measurement step using a forgetting factor ($\lambda$), ensuring the digital twin adapts to sensor noise and transient shifts.
                         </p>
 
                         <div className="rls-formula-box">
@@ -185,227 +191,47 @@ export default function DigitalTwinView({ selectedScenarioId }: Props) {
                             <div className="rls-feature-tag">
                                 <span className="tag-icon">⚡</span>
                                 <div className="tag-text">
-                                    <strong>بدون تاخیر (Zero Latency)</strong>
-                                    <span>انطباق آنی با نویز حسگرها</span>
+                                    <strong>Zero Latency</strong>
+                                    <span>Instant adaptation to sensor noise</span>
                                 </div>
                             </div>
                             <div className="rls-feature-tag">
                                 <span className="tag-icon">🧬</span>
                                 <div className="tag-text">
-                                    <strong>شناسایی فیزیکی</strong>
-                                    <span>استخراج شاخص‌های سلامت دارایی</span>
+                                    <strong>Physical Identification</strong>
+                                    <span>Extracts real-time SOH indicators</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div style={{ flex: '1', minWidth: '300px', display: 'flex', justifyContent: 'center' }}>
-                        {/* ── Custom Animated Schematic ── */}
-                        <div className="rls-schematic">
-                            <div className="node node-input">
-                                <div className="node-label">Inputs</div>
-                                <div className="data-stream">
-                                    <div className="particle"></div>
-                                    <div className="particle delay-1"></div>
-                                    <div className="particle delay-2"></div>
-                                </div>
-                                <div className="signal-box">V[k], I[k]</div>
-                            </div>
-
-                            <div className="flow-line horizontal"></div>
-
-                            <div className="node node-core">
-                                <div className="core-glow"></div>
-                                <div className="core-text">RLS Core</div>
-                                <div className="recursive-loop"></div>
-                                <div className="param-value p-c">C(t)</div>
-                                <div className="param-value p-r">R(t)</div>
-                            </div>
-
-                            <div className="flow-line vertical"></div>
-
-                            <div className="node node-output">
-                                <div className="node-label">Digital Twin</div>
-                                <div className="twin-inner">
-                                    <div className="twin-pulse"></div>
-                                </div>
-                            </div>
-                        </div>
+                    <div style={{ flex: '1', minWidth: '300px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+                        <AnimatedSuperCap
+                            voltage={scenario.data[scenario.data.length - 1]?.measuredVoltage || 0.5}
+                            charging={scenario.data[scenario.data.length - 1]?.current > 0}
+                            color={scenario.accentColor}
+                            size={120}
+                        />
+                        <div className="rls-badge-online">LIVE TRACKING ACTIVE</div>
                     </div>
                 </div>
 
                 <style>{`
-                    .rls-container {
-                        background: linear-gradient(135deg, rgba(6, 10, 19, 0.9), rgba(12, 18, 34, 0.8));
-                    }
-                    .rls-pulse-icon {
-                        font-size: 1.5rem;
-                        animation: pulse-icon 2s infinite ease-in-out;
-                    }
-                    @keyframes pulse-icon {
-                        0%, 100% { transform: scale(1); opacity: 1; }
-                        50% { transform: scale(1.2); opacity: 0.7; }
-                    }
-                    .rls-formula-box {
-                        background: rgba(0, 212, 255, 0.05);
-                        padding: 20px;
-                        border-radius: 12px;
-                        border: 1px dashed var(--cyan-dim);
-                        text-align: center;
-                        font-family: 'JetBrains Mono', monospace;
-                    }
-                    .formula-line { color: var(--cyan); font-weight: bold; font-size: 1.1rem; }
-                    .formula-arrow { color: var(--text-muted); margin: 5px 0; }
-                    .formula-res { color: var(--amber); font-weight: bold; }
-
-                    .rls-feature-tag {
-                        display: flex;
-                        gap: 12px;
-                        padding: 12px;
-                        background: rgba(255,255,255,0.03);
-                        border-radius: 8px;
-                        border: 1px solid var(--border);
-                    }
-                    .tag-icon { font-size: 1.2rem; }
-                    .tag-text { display: flex; flex-direction: column; gap: 2px; }
-                    .tag-text strong { font-size: 0.85rem; color: var(--text-primary); }
-                    .tag-text span { font-size: 0.75rem; color: var(--text-muted); }
-
-                    /* Schematic Styles */
-                    .rls-schematic {
-                        position: relative;
-                        width: 300px;
-                        height: 300px;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                    .node {
-                        width: 80px;
-                        height: 80px;
-                        border-radius: 16px;
-                        background: var(--bg-surface);
-                        border: 2px solid var(--border);
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        position: relative;
-                        z-index: 5;
-                    }
-                    .node-label {
-                        position: absolute;
-                        top: -25px;
-                        font-size: 0.7rem;
-                        text-transform: uppercase;
-                        color: var(--text-muted);
-                        letter-spacing: 1px;
-                    }
-                    .signal-box { font-size: 0.75rem; color: var(--cyan); font-weight: bold; }
-                    
-                    .node-core {
-                        width: 100px;
-                        height: 100px;
-                        border-color: var(--cyan);
-                        background: rgba(0, 212, 255, 0.1);
-                        box-shadow: 0 0 20px var(--cyan-dim);
-                    }
-                    .core-text { font-size: 0.8rem; font-weight: bold; color: white; }
-                    .core-glow {
-                        position: absolute;
-                        inset: -5px;
+                    .rls-badge-online {
+                        padding: 6px 16px;
+                        background: rgba(16, 185, 129, 0.1);
+                        color: var(--emerald);
+                        border: 1px solid var(--emerald-dim);
                         border-radius: 20px;
-                        background: var(--cyan);
-                        filter: blur(15px);
-                        opacity: 0.2;
-                        animation: core-breathing 3s infinite ease-in-out;
+                        font-family: 'JetBrains Mono', monospace;
+                        font-size: 0.7rem;
+                        font-weight: 800;
+                        letter-spacing: 1px;
+                        animation: rls-pulse-badge 2s infinite;
                     }
-                    @keyframes core-breathing {
-                        0%, 100% { opacity: 0.1; transform: scale(1); }
-                        50% { opacity: 0.3; transform: scale(1.1); }
-                    }
-
-                    .recursive-loop {
-                        position: absolute;
-                        width: 120px;
-                        height: 120px;
-                        border: 2px solid transparent;
-                        border-top-color: var(--cyan);
-                        border-radius: 50%;
-                        animation: spin 3s linear infinite;
-                    }
-                    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-                    .param-value {
-                        position: absolute;
-                        padding: 4px 8px;
-                        background: var(--bg-base);
-                        border: 1px solid var(--border);
-                        border-radius: 4px;
-                        font-size: 0.65rem;
-                        font-weight: bold;
-                    }
-                    .p-c { right: -40px; top: 10px; color: var(--cyan); border-color: var(--cyan-dim); }
-                    .p-r { right: -40px; bottom: 10px; color: var(--amber); border-color: var(--amber-dim); }
-
-                    .node-output {
-                        margin-top: 40px;
-                        border-color: var(--emerald);
-                    }
-                    .twin-inner {
-                        width: 30px;
-                        height: 30px;
-                        background: var(--emerald-dim);
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    }
-                    .twin-pulse {
-                        width: 15px;
-                        height: 15px;
-                        background: var(--emerald);
-                        border-radius: 50%;
-                        animation: twin-pulse 1.5s infinite;
-                    }
-                    @keyframes twin-pulse {
-                        0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-                        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-                        100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-                    }
-
-                    .flow-line {
-                        background: var(--border);
-                        position: relative;
-                    }
-                    .flow-line.horizontal { width: 40px; height: 2px; }
-                    .flow-line.vertical { width: 2px; height: 40px; }
-
-                    .data-stream {
-                        position: absolute;
-                        left: -50px;
-                        top: 50%;
-                        width: 50px;
-                        height: 2px;
-                    }
-                    .particle {
-                        position: absolute;
-                        width: 4px;
-                        height: 4px;
-                        background: var(--cyan);
-                        border-radius: 50%;
-                        left: 0;
-                        top: -1px;
-                        animation: particle-flow 2s linear infinite;
-                    }
-                    .delay-1 { animation-delay: 0.6s; }
-                    .delay-2 { animation-delay: 1.2s; }
-                    @keyframes particle-flow {
-                        0% { left: 0; opacity: 0; }
-                        20% { opacity: 1; }
-                        80% { opacity: 1; }
-                        100% { left: 40px; opacity: 0; }
+                    @keyframes rls-pulse-badge {
+                        0%, 100% { opacity: 0.7; box-shadow: 0 0 5px var(--emerald-dim); }
+                        50% { opacity: 1; box-shadow: 0 0 15px var(--emerald-dim); }
                     }
                 `}</style>
             </div>

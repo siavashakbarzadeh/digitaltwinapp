@@ -6,7 +6,8 @@ import ComparisonView from './pages/ComparisonView';
 import LiteratureReview from './pages/LiteratureReview';
 import OfflineTwin from './pages/OfflineTwin';
 import OnlineTwin from './pages/OnlineTwin';
-import { scenarios, Scenario, AssetType, DeviceCondition } from './data/scenarios';
+import { Scenario, AssetType, DeviceCondition } from './data/scenarios';
+interface TabConfig { id: Tab, icon: string, label: string, shortcut: string }
 import { useState, useEffect, useCallback } from 'react';
 import { mae, rmse } from './utils/metrics';
 import { HistoryEntry, Tab } from './types';
